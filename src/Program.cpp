@@ -377,13 +377,13 @@ void Program::getPost(const string id, const string post_id) {
     CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + id +
                      INTERNAL_DATA_POSTS_BASE_NAME);
     if (posts.isExists("post_id", post_id)) {
-    printUserHeader(id);
+      printUserHeader(id);
       vector<string> post = posts.findRow("post_id", post_id);
       cout << post[0] << " \"" << post[1] << "\"" << " \"" << post[2] << "\""
            << endl;
     } else {
-          cout << NOT_FOUND_OUTPUT << endl;
-          return;
+      cout << NOT_FOUND_OUTPUT << endl;
+      return;
     }
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
@@ -497,35 +497,53 @@ void Program::courseOffer(string course_id, string professor_id,
 void Program::studentAddCourse(string id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
-  offer_courses.appendFieldInMatris("offer_course_id", id, "students_id",
-                                    (";" + user_ptr->getId()));
-  offer_courses.writeMatrisToCSV();
-  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
-  vector<string> connections =
-      splitString(config.findField("uid", ADMIN_ID, "connections"), ';');
-  for (const string &id : connections) {
-    sendNotification(user_ptr->getId(), user_ptr->getName(), id, "Get Course");
+  if (offer_courses.isExists("offer_course_id", id)) {
+    vector<string> students_ids = splitString(
+        offer_courses.findField("offer_course_id", id, "students_id"), ';');
+    for (const string &sid : students_ids) {
+      if (sid == user_ptr->getId()) {
+        cout << PERMISSIN_DENIED_OUTPUT << endl;
+        return;
+      }
+    }
+    offer_courses.appendFieldInMatris("offer_course_id", id, "students_id",
+                                      (";" + user_ptr->getId()));
+    offer_courses.writeMatrisToCSV();
+    CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+    vector<string> connections =
+        splitString(config.findField("uid", ADMIN_ID, "connections"), ';');
+    for (const string &id : connections) {
+      sendNotification(user_ptr->getId(), user_ptr->getName(), id,
+                       "Get Course");
+    }
+    cout << OK_OUTPUT << endl;
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
   }
-  cout << OK_OUTPUT << endl;
 }
 
 void Program::studentDeleteCourse(string id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
-  vector<string> students_id = splitString(
-      offer_courses.findField("offer_course_id", id, "students_id"), ';');
-  size_t size_students_id = students_id.size();
-  students_id.erase(
-      remove(students_id.begin(), students_id.end(), user_ptr->getId()),
-      students_id.end());
-  if (size_students_id == students_id.size()) {
-    cout << BAD_REQUEST_OUTPUT << endl;
-  } else {
+  if (offer_courses.isExists("offer_course_id", id)) {
 
-    offer_courses.updateFieldInMatris("offer_course_id", id, "students_id",
-                                      connectString(students_id, ';'));
-    offer_courses.writeMatrisToCSV();
-    cout << OK_OUTPUT << endl;
+    vector<string> students_id = splitString(
+        offer_courses.findField("offer_course_id", id, "students_id"), ';');
+    size_t size_students_id = students_id.size();
+    students_id.erase(
+        remove(students_id.begin(), students_id.end(), user_ptr->getId()),
+        students_id.end());
+    if (size_students_id == students_id.size()) {
+      cout << BAD_REQUEST_OUTPUT << endl;
+    } else {
+
+      offer_courses.updateFieldInMatris("offer_course_id", id, "students_id",
+                                        connectString(students_id, ';'));
+      offer_courses.writeMatrisToCSV();
+      cout << OK_OUTPUT << endl;
+    }
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
   }
 }
 
@@ -702,21 +720,33 @@ void Program::checkStudentCommand(const vector<string> &input) {
   try {
     checkStudentSpecificCommand(input);
   } catch (const runtime_error &e) {
-    checkUserCommand(input);
+    if (std::string(e.what()) == "command not handle in this function") {
+      checkUserCommand(input);
+    } else {
+      std::cout << "Error: " << e.what() << std::endl;
+    }
   }
 }
 void Program::checkProfessorCommand(const vector<string> &input) {
   try {
     checkProfessorSpecificCommand(input);
   } catch (const runtime_error &e) {
-    checkUserCommand(input);
+    if (std::string(e.what()) == "command not handle in this function") {
+      checkUserCommand(input);
+    } else {
+      std::cout << "Error: " << e.what() << std::endl;
+    }
   }
 }
 void Program::checkAdminCommand(const vector<string> &input) {
   try {
     checkAdminSpecificCommand(input);
   } catch (const runtime_error &e) {
-    checkUserCommand(input);
+    if (std::string(e.what()) == "command not handle in this function") {
+      checkUserCommand(input);
+    } else {
+      std::cout << "Error: " << e.what() << std::endl;
+    }
   }
 }
 void Program::checkStudentSpecificCommand(const vector<string> &input) {
