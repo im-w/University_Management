@@ -35,6 +35,7 @@ private:
   void deletePost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);
+  void getPost(const string id, const string post_id);
   void seeAllOfferCourses();
   void seeOfferCourses(const string &id);
   void connect(const string id);

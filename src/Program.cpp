@@ -372,6 +372,25 @@ void Program::seePage(const string id) {
   }
 }
 
+void Program::getPost(const string id, const string post_id) {
+  if (isUserIdValid(id)) {
+    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + id +
+                     INTERNAL_DATA_POSTS_BASE_NAME);
+    if (posts.isExists("post_id", post_id)) {
+    printUserHeader(id);
+      vector<string> post = posts.findRow("post_id", post_id);
+      cout << post[0] << " \"" << post[1] << "\"" << " \"" << post[2] << "\""
+           << endl;
+    } else {
+          cout << NOT_FOUND_OUTPUT << endl;
+          return;
+    }
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
+    return;
+  }
+}
+
 void Program::seeAllOfferCourses() {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
@@ -386,13 +405,9 @@ void Program::seeOfferCourses(const string &id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   vector<string> line = offer_courses.findRow("offer_course_id", id);
-  cout << line[0] << " "
-       << coursesCSV.findField("cid", line[1], "name")
-       << " " << line[3] << " "
-       << professorsCSV.findField("pid", line[2], "name")
-       << " " << line[4] << " "
-       << line[5] << " " << line[6]
-       << endl;
+  cout << line[0] << " " << coursesCSV.findField("cid", line[1], "name") << " "
+       << line[3] << " " << professorsCSV.findField("pid", line[2], "name")
+       << " " << line[4] << " " << line[5] << " " << line[6] << endl;
 }
 
 void Program::connect(const string id) {
@@ -651,6 +666,26 @@ void Program::checkUserCommand(const vector<string> &input) {
           return;
         }
         seeOfferCourses(id);
+      } else if (input[1] == "post") {
+        string id = NONE_STRING;
+        string post_id = NONE_STRING;
+        for (size_t i = 2; i < input.size(); i++) {
+          if (input[i] == "id") {
+            if (i + 1 < input.size()) {
+              id = input[i + 1];
+            }
+          } else if (input[i] == "post_id") {
+            if (i + 1 < input.size()) {
+              post_id = input[i + 1];
+            }
+          }
+        }
+        if (id == NONE_STRING || post_id == NONE_STRING ||
+            (!isNormalNumber(id)) || (!isNormalNumber(post_id))) {
+          cout << BAD_REQUEST_OUTPUT << endl;
+          return;
+        }
+        getPost(id, post_id);
       } else {
         cout << "n10" << endl;
         cout << PERMISSIN_DENIED_OUTPUT << endl;
