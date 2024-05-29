@@ -34,13 +34,7 @@ void Program::run() {
   }
 }
 
-void Program::test() {
-  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
-                           INTERNAL_DATA_OFFER_COURSES_NAME);
-  offer_courses.printData();
-    cout << offer_courses.isExists("sid","810102612") << endl;
-  cout << offer_courses.isExists("course_id","1") << endl;
-}
+void Program::test() {}
 
 void Program::setup() {
   if (!createFileIfNotExists(INTERNAL_DATA_DIRECTORY_PATH +
@@ -644,8 +638,11 @@ void Program::checkProfessorCommand(const vector<string> &input) {
   }
 }
 void Program::checkAdminCommand(const vector<string> &input) {
-  checkAdminSpecificCommand(input);
-  checkUserCommand(input);
+  try {
+    checkAdminSpecificCommand(input);
+  } catch (const runtime_error &e) {
+    checkUserCommand(input);
+  }
 }
 void Program::checkStudentSpecificCommand(const vector<string> &input) {
   if (input[0] == "PUT") {
@@ -745,13 +742,13 @@ void Program::checkAdminSpecificCommand(const vector<string> &input) {
         cout << NOT_FOUND_OUTPUT << endl;
         return;
 
-      } else if ((!isCourseOfferTimeOverlap(professor_id, time)) ||
-                 (!isCourseOfferProfessorCanTeachCourse(professor_id,
-                                                        course_id))) {
-        cout << "n11" << endl;
-        cout << PERMISSIN_DENIED_OUTPUT << endl;
-        return;
-      }
+       }// else if ((!isCourseOfferTimeOverlap(professor_id, time)) ||
+      //            (!isCourseOfferProfessorCanTeachCourse(professor_id,
+      //                                                   course_id))) {
+      //   cout << "n11" << endl;
+      //   cout << PERMISSIN_DENIED_OUTPUT << endl;
+      //   return;
+      // }
       courseOffer(course_id, professor_id, capacity, time, exam_date,
                   class_number);
     } else {

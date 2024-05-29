@@ -58,23 +58,29 @@ string CSVHandler::size() const {
 
 vector<string> CSVHandler::findColumn(const string key) const {
   vector<string> result_vector;
-  if (matris.empty() || matris[0].empty())
+  
+  if (matris.empty() || matris[0].empty()) {
     return result_vector;
-  vector<string>::const_iterator it =
-      find(matris[0].begin(), matris[0].end(), key);
+  }
+  
+  auto it = find(matris[0].begin(), matris[0].end(), key);
+  
   if (it == matris[0].end()) {
     throw runtime_error("Key not found in header. key: " + key);
     return result_vector;
   }
+  
   size_t index = distance(matris[0].begin(), it);
+  
   for (size_t i = 1; i < matris.size(); ++i) {
-    if (index < static_cast<int>(matris[i].size())) {
+    if (index < matris[i].size()) {
       result_vector.push_back(matris[i][index]);
     } else {
       throw runtime_error("Index out of bounds. index: "+to_string(index)+" key: "+key);
       return result_vector;
     }
   }
+  
   return result_vector;
 }
 
