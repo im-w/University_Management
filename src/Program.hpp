@@ -35,6 +35,8 @@ private:
   void deletePost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);
+  void seeAllOfferCourses();
+  void seeOfferCourses(const string &id);
   void connect(const string id);
   void sendNotification(const string sender_id, const string sender_name,
                         const string send_to_id, const string massage);
@@ -60,12 +62,6 @@ private:
   bool isStudentIdValid(const string &id);
   bool isProfessorIdValid(const string &id);
   bool isCourseIdValid(const string &id);
-  bool isCourseOfferTimeOverlap(const string &professor_id, const string &time);
-  bool isTimeOverlap(const string &time1, const string &time2);
-  void splitTime(const string &timeStr, string &weekday, int &startHour,
-                 int &endHour);
-  bool isCourseOfferProfessorCanTeachCourse(const string &professor_id,
-                                            const string &course_id);
 
   string majorsFile_path;
   string studentsFile_path;

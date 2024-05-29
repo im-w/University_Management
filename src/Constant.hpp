@@ -17,7 +17,7 @@ enum class Permission {
 const vector<string> POST_COMMAND_LIST = {"login","logout","post","connect","course_offer","my_courses"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post","my_courses"};
-const vector<string> GET_COMMAND_LIST = {"notification","my_courses","personal_page"};
+const vector<string> GET_COMMAND_LIST = {"notification","my_courses","personal_page","courses"};
 const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
 const string ADMIN_NAME = "ADMIN";

@@ -372,6 +372,29 @@ void Program::seePage(const string id) {
   }
 }
 
+void Program::seeAllOfferCourses() {
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                           INTERNAL_DATA_OFFER_COURSES_NAME);
+  vector<vector<string>> body_offer_courses = offer_courses.bodyMatris();
+  for (const vector<string> &line : body_offer_courses) {
+    cout << line[0] << " " << coursesCSV.findField("cid", line[1], "name")
+         << " " << line[3] << " "
+         << professorsCSV.findField("pid", line[2], "name") << endl;
+  }
+}
+void Program::seeOfferCourses(const string &id) {
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                           INTERNAL_DATA_OFFER_COURSES_NAME);
+  vector<string> line = offer_courses.findRow("offer_course_id", id);
+  cout << line[0] << " "
+       << coursesCSV.findField("cid", line[1], "name")
+       << " " << line[3] << " "
+       << professorsCSV.findField("pid", line[2], "name")
+       << " " << line[4] << " "
+       << line[5] << " " << line[6]
+       << endl;
+}
+
 void Program::connect(const string id) {
   string uid = user_ptr->getId();
   if (id == uid) {
@@ -611,6 +634,23 @@ void Program::checkUserCommand(const vector<string> &input) {
           return;
         }
         seePage(id);
+      } else if (input[1] == "courses") {
+        string id = NONE_STRING;
+        for (size_t i = 2; i < input.size(); i++) {
+          if (input[i] == "id") {
+            if (i + 1 < input.size()) {
+              id = input[i + 1];
+            }
+          }
+        }
+        if (id == NONE_STRING) {
+          seeAllOfferCourses();
+          return;
+        } else if ((!isNormalNumber(id))) {
+          cout << BAD_REQUEST_OUTPUT << endl;
+          return;
+        }
+        seeOfferCourses(id);
       } else {
         cout << "n10" << endl;
         cout << PERMISSIN_DENIED_OUTPUT << endl;
@@ -741,14 +781,7 @@ void Program::checkAdminSpecificCommand(const vector<string> &input) {
                  !isProfessorIdValid(professor_id)) {
         cout << NOT_FOUND_OUTPUT << endl;
         return;
-
-       }// else if ((!isCourseOfferTimeOverlap(professor_id, time)) ||
-      //            (!isCourseOfferProfessorCanTeachCourse(professor_id,
-      //                                                   course_id))) {
-      //   cout << "n11" << endl;
-      //   cout << PERMISSIN_DENIED_OUTPUT << endl;
-      //   return;
-      // }
+      }
       courseOffer(course_id, professor_id, capacity, time, exam_date,
                   class_number);
     } else {
@@ -821,86 +854,6 @@ bool Program::isProfessorIdValid(const string &id) {
 bool Program::isCourseIdValid(const string &id) {
   if (coursesCSV.isExists("cid", id)) {
     return true;
-  }
-  return false;
-}
-
-bool Program::isCourseOfferTimeOverlap(const string &professor_id,
-                                       const string &time) {
-  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
-                           INTERNAL_DATA_OFFER_COURSES_NAME);
-  int time_header_index = offer_courses.keyHeaderIndex("time");
-  vector<string> professor_ids = offer_courses.findColumn("professor_id");
-  vector<size_t> professor_courses_index = {};
-  size_t index = 0;
-  for (const string &_professor_id : professor_ids) {
-    if (professor_id == _professor_id) {
-      professor_courses_index.push_back(index);
-    }
-    index++;
-  }
-  if (professor_courses_index.empty()) {
-    return false;
-  }
-  vector<vector<string>> offer_courses_body = offer_courses.bodyMatris();
-  for (const size_t &i : professor_courses_index) {
-    if (isTimeOverlap(time, offer_courses_body[i][time_header_index])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-bool Program::isTimeOverlap(const string &time1, const string &time2) {
-  std::string weekday1, weekday2;
-  int startHour1, endHour1, startHour2, endHour2;
-  splitTime(time1, weekday1, startHour1, endHour1);
-  splitTime(time2, weekday2, startHour2, endHour2);
-  if (weekday1 != weekday2) {
-    return false;
-  }
-  if ((startHour2 >= startHour1 && startHour2 < endHour1) ||
-      (endHour2 > startHour1 && endHour2 <= endHour1) ||
-      (startHour1 >= startHour2 && startHour1 < endHour2) ||
-      (endHour1 > startHour2 && endHour1 <= endHour2)) {
-    return true;
-  }
-  return false;
-}
-
-void Program::splitTime(const string &timeStr, string &weekday, int &startHour,
-                        int &endHour) {
-  weekday.clear();
-  string startHourStr, endHourStr;
-  size_t i = 0;
-  while (i < timeStr.size() && timeStr[i] != ':') {
-    weekday += timeStr[i];
-    i++;
-  }
-  i++;
-  while (i < timeStr.size() && timeStr[i] != '-') {
-    startHourStr += timeStr[i];
-    i++;
-  }
-  i++;
-  while (i < timeStr.size()) {
-    endHourStr += timeStr[i];
-    i++;
-  }
-  startHour = stoi(startHourStr);
-  endHour = stoi(endHourStr);
-}
-
-bool Program::isCourseOfferProfessorCanTeachCourse(const string &professor_id,
-                                                   const string &course_id) {
-  string professor_major_id =
-      professorsCSV.findField("pid", professor_id, "major_id");
-  vector<string> course_major_ids =
-      splitString(coursesCSV.findField("cid", course_id, "major_id"), ';');
-  for (const string &course_major_id : course_major_ids) {
-    if (course_major_id == professor_major_id) {
-      return true;
-    }
   }
   return false;
 }
