@@ -69,6 +69,15 @@ private:
   bool isCourseOfferStudedntTimeOverlap(const string &offer_course_id);
   bool isCourseOfferStudentMajorOk(const string &offer_course_id);
   bool isCourseOfferStudentCreditOk(const string &offer_course_id);
+  void postPostCommand(const vector<string> &input);
+  void postConnectCommand(const vector<string> &input);
+  void deletePostCommand(const vector<string> &input);
+  void getPersonalPageCommand(const vector<string> &input);
+  void getCoursesCommand(const vector<string> &input);
+  void getPostCommand(const vector<string> &input);
+  void studentPutMycourseCommand(const vector<string> &input);
+  void studentDeleteCourseCommand(const vector<string> &input);
+  void AdminPostOffercourseCommand(const vector<string> &input);
 
   string majorsFile_path;
   string studentsFile_path;

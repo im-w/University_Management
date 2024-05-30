@@ -618,38 +618,9 @@ void Program::checkUserCommand(const vector<string> &input) {
       if (input[1] == LOGOUT_SUB_COMMAND) {
         logout();
       } else if (input[1] == POST_SUB_COMMAND) {
-        string title = NONE_STRING;
-        string message = NONE_STRING;
-        for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "title") {
-            if (i + 1 < input.size()) {
-              title = input[i + 1];
-            }
-          } else if (input[i] == "message") {
-            if (i + 1 < input.size()) {
-              message = input[i + 1];
-            }
-          }
-        }
-        if (title == NONE_STRING || message == NONE_STRING) {
-          cout << BAD_REQUEST_OUTPUT << endl;
-          return;
-        }
-        post(title, message);
+        postPostCommand(input);
       } else if (input[1] == CONNECT_SUB_COMMAND) {
-        string id = NONE_STRING;
-        for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "id") {
-            if (i + 1 < input.size()) {
-              id = input[i + 1];
-            }
-          }
-        }
-        if (id == NONE_STRING || (!isNormalNumber(id))) {
-          cout << BAD_REQUEST_OUTPUT << endl;
-          return;
-        }
-        connect(id);
+        postConnectCommand(input);
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
@@ -659,19 +630,7 @@ void Program::checkUserCommand(const vector<string> &input) {
   } else if (input[0] == DELETE_COMMAND) {
     if (isCommandInList(input[1], DELETE_COMMAND_LIST)) {
       if (input[1] == POST_SUB_COMMAND) {
-        string id = NONE_STRING;
-        for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "id") {
-            if (i + 1 < input.size()) {
-              id = input[i + 1];
-            }
-          }
-        }
-        if (id == NONE_STRING || (!isNormalNumber(id))) {
-          cout << BAD_REQUEST_OUTPUT << endl;
-          return;
-        }
-        deletePost(id);
+        deletePostCommand(input);
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
@@ -683,56 +642,11 @@ void Program::checkUserCommand(const vector<string> &input) {
       if (input[1] == NOTIFICATION_SUB_COMMAND) {
         getNotification();
       } else if (input[1] == PERSONAL_PAGE_SUB_COMMAND) {
-        string id = NONE_STRING;
-        for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "id") {
-            if (i + 1 < input.size()) {
-              id = input[i + 1];
-            }
-          }
-        }
-        if (id == NONE_STRING || (!isNormalNumber(id))) {
-          cout << BAD_REQUEST_OUTPUT << endl;
-          return;
-        }
-        seePage(id);
+        getPersonalPageCommand(input);
       } else if (input[1] == COURSES_SUB_COMMAND) {
-        string id = NONE_STRING;
-        for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "id") {
-            if (i + 1 < input.size()) {
-              id = input[i + 1];
-            }
-          }
-        }
-        if (id == NONE_STRING) {
-          seeAllOfferCourses();
-          return;
-        } else if ((!isNormalNumber(id))) {
-          cout << BAD_REQUEST_OUTPUT << endl;
-          return;
-        }
-        seeOfferCourses(id);
+        getCoursesCommand(input);
       } else if (input[1] == POST_SUB_COMMAND) {
-        string id = NONE_STRING;
-        string post_id = NONE_STRING;
-        for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "id") {
-            if (i + 1 < input.size()) {
-              id = input[i + 1];
-            }
-          } else if (input[i] == "post_id") {
-            if (i + 1 < input.size()) {
-              post_id = input[i + 1];
-            }
-          }
-        }
-        if (id == NONE_STRING || post_id == NONE_STRING ||
-            (!isNormalNumber(id)) || (!isNormalNumber(post_id))) {
-          cout << BAD_REQUEST_OUTPUT << endl;
-          return;
-        }
-        getPost(id, post_id);
+        getPostCommand(input);
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
@@ -786,25 +700,7 @@ void Program::checkAdminCommand(const vector<string> &input) {
 void Program::checkStudentSpecificCommand(const vector<string> &input) {
   if (input[0] == PUT_COMMAND) {
     if (input[1] == MY_COURSES_SUB_COMMAND) {
-      string id = NONE_STRING;
-      for (size_t i = 3; i < input.size(); i++) {
-        if (input[i] == "id") {
-          if (i + 1 < input.size()) {
-            id = input[i + 1];
-          }
-        }
-      }
-      if (id == NONE_STRING || (!isNormalNumber(id))) {
-        cout << BAD_REQUEST_OUTPUT << endl;
-        return;
-      } else if (isCourseOfferStudedntTimeOverlap(id) ||
-                 (!isCourseOfferStudentMajorOk(id)) ||
-                 (!isCourseOfferStudentCreditOk(id))) {
-        cout << PERMISSIN_DENIED_OUTPUT << endl;
-        return;
-      }
-
-      studentAddCourse(id);
+      studentPutMycourseCommand(input);
     } else {
       throw runtime_error("command not handle in this function");
     }
@@ -816,19 +712,7 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
     }
   } else if (input[0] == DELETE_COMMAND) {
     if (input[1] == MY_COURSES_SUB_COMMAND) {
-      string id = NONE_STRING;
-      for (size_t i = 3; i < input.size(); i++) {
-        if (input[i] == "id") {
-          if (i + 1 < input.size()) {
-            id = input[i + 1];
-          }
-        }
-      }
-      if (id == NONE_STRING || (!isNormalNumber(id))) {
-        cout << BAD_REQUEST_OUTPUT << endl;
-        return;
-      }
-      studentDeleteCourse(id);
+      studentDeleteCourseCommand(input);
     } else {
       throw runtime_error("command not handle in this function");
     }
@@ -842,58 +726,7 @@ void Program::checkProfessorSpecificCommand(const vector<string> &input) {
 void Program::checkAdminSpecificCommand(const vector<string> &input) {
   if (input[0] == POST_COMMAND) {
     if (input[1] == COURSE_OFFER_SUB_COMMAND) {
-      string course_id = NONE_STRING;
-      string professor_id = NONE_STRING;
-      string capacity = NONE_STRING;
-      string time = NONE_STRING;
-      string exam_date = NONE_STRING;
-      string class_number = NONE_STRING;
-      for (size_t i = 3; i < input.size(); i++) {
-        if (input[i] == "course_id") {
-          if (i + 1 < input.size()) {
-            course_id = input[i + 1];
-          }
-        } else if (input[i] == "professor_id") {
-          if (i + 1 < input.size()) {
-            professor_id = input[i + 1];
-          }
-        } else if (input[i] == "capacity") {
-          if (i + 1 < input.size()) {
-            capacity = input[i + 1];
-          }
-        } else if (input[i] == "time") {
-          if (i + 1 < input.size()) {
-            time = input[i + 1];
-          }
-        } else if (input[i] == "exam_date") {
-          if (i + 1 < input.size()) {
-            exam_date = input[i + 1];
-          }
-        } else if (input[i] == "class_number") {
-          if (i + 1 < input.size()) {
-            class_number = input[i + 1];
-          }
-        }
-      }
-      if (course_id == NONE_STRING || professor_id == NONE_STRING ||
-          capacity == NONE_STRING || time == NONE_STRING ||
-          exam_date == NONE_STRING || class_number == NONE_STRING ||
-          (!isNormalNumber(course_id)) || (!isNormalNumber(professor_id)) ||
-          (!isNormalNumber(capacity)) || (!isNormalNumber(class_number))) {
-        cout << BAD_REQUEST_OUTPUT << endl;
-        return;
-      } else if (isStudentIdValid(professor_id) || (professor_id == ADMIN_ID) ||
-                 isCourseOfferProfessorTimeOverlap(time, professor_id) ||
-                 (!isCourseOfferProfessorMajorOk(professor_id, course_id))) {
-        cout << PERMISSIN_DENIED_OUTPUT << endl;
-        return;
-      } else if (!isCourseIdValid(course_id) ||
-                 !isProfessorIdValid(professor_id)) {
-        cout << NOT_FOUND_OUTPUT << endl;
-        return;
-      }
-      courseOffer(course_id, professor_id, capacity, time, exam_date,
-                  class_number);
+      AdminPostOffercourseCommand(input);
     } else {
       throw runtime_error("command not handle in this function");
     }
@@ -1046,4 +879,205 @@ bool Program::isCourseOfferStudentCreditOk(const string &offer_course_id) {
       "prerequisite");
 
   return (stoi(student_semester) >= stoi(prerequisite));
+}
+
+void Program::postPostCommand(const vector<string> &input) {
+  string title = NONE_STRING;
+  string message = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "title") {
+      if (i + 1 < input.size()) {
+        title = input[i + 1];
+      }
+    } else if (input[i] == "message") {
+      if (i + 1 < input.size()) {
+        message = input[i + 1];
+      }
+    }
+  }
+  if (title == NONE_STRING || message == NONE_STRING) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  post(title, message);
+}
+
+void Program::postConnectCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  connect(id);
+}
+
+void Program::deletePostCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  deletePost(id);
+}
+
+void Program::getPersonalPageCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  seePage(id);
+}
+
+void Program::getCoursesCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING) {
+    seeAllOfferCourses();
+    return;
+  } else if ((!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  seeOfferCourses(id);
+}
+
+void Program::getPostCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  string post_id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    } else if (input[i] == "post_id") {
+      if (i + 1 < input.size()) {
+        post_id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || post_id == NONE_STRING || (!isNormalNumber(id)) ||
+      (!isNormalNumber(post_id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  getPost(id, post_id);
+}
+
+void Program::studentPutMycourseCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  } else if (isCourseOfferStudedntTimeOverlap(id) ||
+             (!isCourseOfferStudentMajorOk(id)) ||
+             (!isCourseOfferStudentCreditOk(id))) {
+    cout << PERMISSIN_DENIED_OUTPUT << endl;
+    return;
+  }
+
+  studentAddCourse(id);
+}
+
+void Program::studentDeleteCourseCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  studentDeleteCourse(id);
+}
+
+void Program::AdminPostOffercourseCommand(const vector<string> &input) {
+  string course_id = NONE_STRING;
+  string professor_id = NONE_STRING;
+  string capacity = NONE_STRING;
+  string time = NONE_STRING;
+  string exam_date = NONE_STRING;
+  string class_number = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "course_id") {
+      if (i + 1 < input.size()) {
+        course_id = input[i + 1];
+      }
+    } else if (input[i] == "professor_id") {
+      if (i + 1 < input.size()) {
+        professor_id = input[i + 1];
+      }
+    } else if (input[i] == "capacity") {
+      if (i + 1 < input.size()) {
+        capacity = input[i + 1];
+      }
+    } else if (input[i] == "time") {
+      if (i + 1 < input.size()) {
+        time = input[i + 1];
+      }
+    } else if (input[i] == "exam_date") {
+      if (i + 1 < input.size()) {
+        exam_date = input[i + 1];
+      }
+    } else if (input[i] == "class_number") {
+      if (i + 1 < input.size()) {
+        class_number = input[i + 1];
+      }
+    }
+  }
+  if (course_id == NONE_STRING || professor_id == NONE_STRING ||
+      capacity == NONE_STRING || time == NONE_STRING ||
+      exam_date == NONE_STRING || class_number == NONE_STRING ||
+      (!isNormalNumber(course_id)) || (!isNormalNumber(professor_id)) ||
+      (!isNormalNumber(capacity)) || (!isNormalNumber(class_number))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  } else if (isStudentIdValid(professor_id) || (professor_id == ADMIN_ID) ||
+             isCourseOfferProfessorTimeOverlap(time, professor_id) ||
+             (!isCourseOfferProfessorMajorOk(professor_id, course_id))) {
+    cout << PERMISSIN_DENIED_OUTPUT << endl;
+    return;
+  } else if (!isCourseIdValid(course_id) || !isProfessorIdValid(professor_id)) {
+    cout << NOT_FOUND_OUTPUT << endl;
+    return;
+  }
+  courseOffer(course_id, professor_id, capacity, time, exam_date, class_number);
 }
