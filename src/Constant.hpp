@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-
 using namespace std;
 
 enum class Permission { Guest, Student, Professor, Admin };
@@ -30,5 +29,18 @@ const string INTERNAL_DATA_POSTS_BASE_NAME = "-posts.csv";
 const string INTERNAL_DATA_NOTIFICATIONS_BASE_NAME = "-notifications.csv";
 const string INTERNAL_DATA_CONFIG_NAME = "configuration.csv";
 const string INTERNAL_DATA_OFFER_COURSES_NAME = "offer-courses.csv";
+const string POST_COMMAND = "POST";
+const string DELETE_COMMAND = "DELETE";
+const string GET_COMMAND = "GET";
+const string PUT_COMMAND = "PUT";
+const string LOGIN_SUB_COMMAND = "login";
+const string LOGOUT_SUB_COMMAND = "logout";
+const string POST_SUB_COMMAND = "post";
+const string CONNECT_SUB_COMMAND = "connect";
+const string NOTIFICATION_SUB_COMMAND = "notification";
+const string PERSONAL_PAGE_SUB_COMMAND = "personal_page";
+const string COURSES_SUB_COMMAND = "courses";
+const string MY_COURSES_SUB_COMMAND = "my_courses";
+const string COURSE_OFFER_SUB_COMMAND = "course_offer";
 
 #endif // CONSTANT_HPP

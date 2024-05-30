@@ -181,9 +181,9 @@ void Program::parseInput(const vector<string> &input) {
 }
 
 void Program::checkLoginCommand(const vector<string> &input) {
-  if (input[0] == "POST") {
+  if (input[0] == POST_COMMAND) {
     if (isCommandInList(input[1], POST_COMMAND_LIST)) {
-      if (input[1] == "login") {
+      if (input[1] == LOGIN_SUB_COMMAND) {
         string id = NONE_STRING;
         string password = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
@@ -210,19 +210,19 @@ void Program::checkLoginCommand(const vector<string> &input) {
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
-  } else if (input[0] == "PUT") {
+  } else if (input[0] == PUT_COMMAND) {
     if (isCommandInList(input[1], PUT_COMMAND_LIST)) {
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
-  } else if (input[0] == "GET") {
+  } else if (input[0] == GET_COMMAND) {
     if (isCommandInList(input[1], GET_COMMAND_LIST)) {
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
-  } else if (input[0] == "DELETE") {
+  } else if (input[0] == DELETE_COMMAND) {
     if (isCommandInList(input[1], DELETE_COMMAND_LIST)) {
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
@@ -613,11 +613,11 @@ void Program::studentAllCourses() {
 }
 
 void Program::checkUserCommand(const vector<string> &input) {
-  if (input[0] == "POST") {
+  if (input[0] == POST_COMMAND) {
     if (isCommandInList(input[1], POST_COMMAND_LIST)) {
-      if (input[1] == "logout") {
+      if (input[1] == LOGOUT_SUB_COMMAND) {
         logout();
-      } else if (input[1] == "post") {
+      } else if (input[1] == POST_SUB_COMMAND) {
         string title = NONE_STRING;
         string message = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
@@ -636,7 +636,7 @@ void Program::checkUserCommand(const vector<string> &input) {
           return;
         }
         post(title, message);
-      } else if (input[1] == "connect") {
+      } else if (input[1] == CONNECT_SUB_COMMAND) {
         string id = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
@@ -656,9 +656,9 @@ void Program::checkUserCommand(const vector<string> &input) {
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
-  } else if (input[0] == "DELETE") {
+  } else if (input[0] == DELETE_COMMAND) {
     if (isCommandInList(input[1], DELETE_COMMAND_LIST)) {
-      if (input[1] == "post") {
+      if (input[1] == POST_SUB_COMMAND) {
         string id = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
@@ -678,11 +678,11 @@ void Program::checkUserCommand(const vector<string> &input) {
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
-  } else if (input[0] == "GET") {
+  } else if (input[0] == GET_COMMAND) {
     if (isCommandInList(input[1], GET_COMMAND_LIST)) {
-      if (input[1] == "notification") {
+      if (input[1] == NOTIFICATION_SUB_COMMAND) {
         getNotification();
-      } else if (input[1] == "personal_page") {
+      } else if (input[1] == PERSONAL_PAGE_SUB_COMMAND) {
         string id = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
@@ -696,7 +696,7 @@ void Program::checkUserCommand(const vector<string> &input) {
           return;
         }
         seePage(id);
-      } else if (input[1] == "courses") {
+      } else if (input[1] == COURSES_SUB_COMMAND) {
         string id = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
@@ -713,7 +713,7 @@ void Program::checkUserCommand(const vector<string> &input) {
           return;
         }
         seeOfferCourses(id);
-      } else if (input[1] == "post") {
+      } else if (input[1] == POST_SUB_COMMAND) {
         string id = NONE_STRING;
         string post_id = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
@@ -736,6 +736,12 @@ void Program::checkUserCommand(const vector<string> &input) {
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
+    } else {
+      cout << NOT_FOUND_OUTPUT << endl;
+    }
+  } else if (input[0] == PUT_COMMAND) {
+    if (isCommandInList(input[1], PUT_COMMAND_LIST)) {
+      cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
@@ -778,8 +784,8 @@ void Program::checkAdminCommand(const vector<string> &input) {
   }
 }
 void Program::checkStudentSpecificCommand(const vector<string> &input) {
-  if (input[0] == "PUT") {
-    if (input[1] == "my_courses") {
+  if (input[0] == PUT_COMMAND) {
+    if (input[1] == MY_COURSES_SUB_COMMAND) {
       string id = NONE_STRING;
       for (size_t i = 3; i < input.size(); i++) {
         if (input[i] == "id") {
@@ -802,14 +808,14 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
     } else {
       throw runtime_error("command not handle in this function");
     }
-  } else if (input[0] == "GET") {
-    if (input[1] == "my_courses") {
+  } else if (input[0] == GET_COMMAND) {
+    if (input[1] == MY_COURSES_SUB_COMMAND) {
       studentAllCourses();
     } else {
       throw runtime_error("command not handle in this function");
     }
-  } else if (input[0] == "DELETE") {
-    if (input[1] == "my_courses") {
+  } else if (input[0] == DELETE_COMMAND) {
+    if (input[1] == MY_COURSES_SUB_COMMAND) {
       string id = NONE_STRING;
       for (size_t i = 3; i < input.size(); i++) {
         if (input[i] == "id") {
@@ -834,8 +840,8 @@ void Program::checkProfessorSpecificCommand(const vector<string> &input) {
   throw runtime_error("command not handle in this function");
 }
 void Program::checkAdminSpecificCommand(const vector<string> &input) {
-  if (input[0] == "POST") {
-    if (input[1] == "course_offer") {
+  if (input[0] == POST_COMMAND) {
+    if (input[1] == COURSE_OFFER_SUB_COMMAND) {
       string course_id = NONE_STRING;
       string professor_id = NONE_STRING;
       string capacity = NONE_STRING;
