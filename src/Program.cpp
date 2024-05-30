@@ -3,6 +3,7 @@
 #include "Constant.hpp"
 #include "Professor.hpp"
 #include "Student.hpp"
+#include "TimeRange.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <exception>
@@ -243,6 +244,7 @@ void Program::login(const string id, const string password) {
                              studentsCSV.findField("sid", id, "major_id"),
                              studentsCSV.findField("sid", id, "semester"));
       permission = Permission::Student;
+      cout << "n1" << endl;
       cout << OK_OUTPUT << endl;
     } else {
       cout << "n5" << endl;
@@ -254,6 +256,7 @@ void Program::login(const string id, const string password) {
                                professorsCSV.findField("pid", id, "major_id"),
                                professorsCSV.findField("pid", id, "position"));
       permission = Permission::Professor;
+      cout << "n2" << endl;
       cout << OK_OUTPUT << endl;
     } else {
       cout << "n6" << endl;
@@ -263,6 +266,7 @@ void Program::login(const string id, const string password) {
     if (password == ADMIN_PASSWORD) {
       user_ptr = new Admin(id, ADMIN_NAME);
       permission = Permission::Admin;
+      cout << "n3" << endl;
       cout << OK_OUTPUT << endl;
     } else {
       cout << "n7" << endl;
@@ -276,6 +280,7 @@ void Program::login(const string id, const string password) {
 void Program::logout() {
   permission = Permission::Guest;
   delete user_ptr;
+  cout << "n4" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -296,6 +301,7 @@ void Program::post(const string title, const string message) {
   for (const string &id : connections) {
     sendNotification(uid, user_ptr->getName(), id, "New Post");
   }
+  cout << "n5" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -310,6 +316,7 @@ void Program::deletePost(const string id) {
     return;
   }
   posts.writeMatrisToCSV();
+  cout << "n6" << endl;
   cout << OK_OUTPUT << endl;
 }
 void Program::printUserHeader(const string id) {
@@ -435,6 +442,7 @@ void Program::connect(const string id) {
     cout << NOT_FOUND_OUTPUT << endl;
     return;
   }
+  cout << "n7" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -491,6 +499,7 @@ void Program::courseOffer(string course_id, string professor_id,
   for (const string &id : connections) {
     sendNotification(professor_id, professor_name, id, "New Course Offering");
   }
+  cout << "n8" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -516,6 +525,7 @@ void Program::studentAddCourse(string id) {
       sendNotification(user_ptr->getId(), user_ptr->getName(), id,
                        "Get Course");
     }
+    cout << "n9" << endl;
     cout << OK_OUTPUT << endl;
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
@@ -540,6 +550,7 @@ void Program::studentDeleteCourse(string id) {
       offer_courses.updateFieldInMatris("offer_course_id", id, "students_id",
                                         connectString(students_id, ';'));
       offer_courses.writeMatrisToCSV();
+      cout << "n10" << endl;
       cout << OK_OUTPUT << endl;
     }
   } else {
@@ -842,6 +853,10 @@ void Program::checkAdminSpecificCommand(const vector<string> &input) {
           (!isNormalNumber(capacity)) || (!isNormalNumber(class_number))) {
         cout << BAD_REQUEST_OUTPUT << endl;
         return;
+      } else if (isStudentIdValid(professor_id) || (professor_id == ADMIN_ID) ||
+                 isOfferProfessorTimeOverlap(time, professor_id)) {
+        cout << PERMISSIN_DENIED_OUTPUT << endl;
+        return;
       } else if (!isCourseIdValid(course_id) ||
                  !isProfessorIdValid(professor_id)) {
         cout << NOT_FOUND_OUTPUT << endl;
@@ -919,6 +934,21 @@ bool Program::isProfessorIdValid(const string &id) {
 bool Program::isCourseIdValid(const string &id) {
   if (coursesCSV.isExists("cid", id)) {
     return true;
+  }
+  return false;
+}
+
+bool Program::isOfferProfessorTimeOverlap(const string &time,
+                                          const string &professor_id) {
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                           INTERNAL_DATA_OFFER_COURSES_NAME);
+  vector<vector<string>> offer_courses_body = offer_courses.bodyMatris();
+  for (vector<string> &line : offer_courses_body) {
+    if (line[2] == professor_id) {
+      if (isOverlap(parseTimeRange(time), parseTimeRange(line[4])) == true) {
+        return true;
+      }
+    }
   }
   return false;
 }

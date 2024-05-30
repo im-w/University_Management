@@ -63,6 +63,8 @@ private:
   bool isStudentIdValid(const string &id);
   bool isProfessorIdValid(const string &id);
   bool isCourseIdValid(const string &id);
+  bool isOfferProfessorTimeOverlap(const string &time,
+                                          const string &professor_id);
 
   string majorsFile_path;
   string studentsFile_path;
