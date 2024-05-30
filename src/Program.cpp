@@ -677,7 +677,7 @@ void Program::checkStudentCommand(const vector<string> &input) {
 }
 void Program::checkProfessorCommand(const vector<string> &input) {
   try {
-    checkProfessorSpecificCommand(input);
+    checkProfessorSpecificCommand();
   } catch (const runtime_error &e) {
     if (std::string(e.what()) == "command not handle in this function") {
       checkUserCommand(input);
@@ -720,7 +720,8 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
     throw runtime_error("command not handle in this function");
   }
 }
-void Program::checkProfessorSpecificCommand(const vector<string> &input) {
+void Program::checkProfessorSpecificCommand() {
+  
   throw runtime_error("command not handle in this function");
 }
 void Program::checkAdminSpecificCommand(const vector<string> &input) {

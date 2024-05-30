@@ -1,26 +1,44 @@
-CXX = g++
-CXXFLAGS = -std=c++20 -Wall
-TARGET = utms.out
-SRCDIR = src
-BUILDDIR = build
+# Compiler
+CC := g++
+# Compiler flags
+CFLAGS := -std=c++11 -Wall -Wextra
 
-# Get all source files
-SRCS := $(wildcard $(SRCDIR)/*.cpp)
+# Directories
+SRC_DIR := src
+BUILD_DIR := build
 
-# Generate object file names
-OBJS := $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRCS))
+# Source files
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
+# Object files
+OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
+# Main object file
+MAIN_OBJ := $(BUILD_DIR)/main.o
 
-all: $(TARGET)
+# Output binary
+OUTPUT := utms.out
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+# Target: all (default)
+all: $(OUTPUT)
 
-# Compile each source file into object files
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Rule to create build directory
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+# Rule to compile source files into object files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
+# Rule to compile main.cpp into main object file
+$(MAIN_OBJ): main.cpp | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Rule to link object files and create the output binary
+$(OUTPUT): $(OBJS) $(MAIN_OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Target: clean
 clean:
-	rm -f $(BUILDDIR)/*.o $(TARGET)
+	rm -rf $(BUILD_DIR) $(OUTPUT)
+
+# Phony targets
+.PHONY: all clean

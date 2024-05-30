@@ -53,7 +53,7 @@ private:
   void checkProfessorCommand(const vector<string> &input);
   void checkAdminCommand(const vector<string> &input);
   void checkStudentSpecificCommand(const vector<string> &input);
-  void checkProfessorSpecificCommand(const vector<string> &input);
+  void checkProfessorSpecificCommand();
   void checkAdminSpecificCommand(const vector<string> &input);
   vector<string> splitString(const string &input, const char delimiter);
   string connectString(const vector<string> &input, const char delimiter);
