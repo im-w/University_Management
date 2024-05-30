@@ -63,6 +63,16 @@ void Program::setup() {
 }
 
 bool Program::createFileIfNotExists(const string &filename) {
+  if (REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN == true) {
+    ofstream outfile(filename);
+    if (outfile.is_open()) {
+      bool IsExsists = false;
+      return IsExsists;
+    } else {
+      throw runtime_error("Failed to create file: " + filename);
+    }
+    return false;
+  }
   bool IsExsists = false;
   ifstream infile(filename);
   if (!infile.is_open()) {
@@ -176,7 +186,7 @@ void Program::checkLoginCommand(const vector<string> &input) {
       if (input[1] == "login") {
         string id = NONE_STRING;
         string password = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
             if (i + 1 < input.size()) {
               id = input[i + 1];
@@ -195,7 +205,6 @@ void Program::checkLoginCommand(const vector<string> &input) {
         }
         login(id, password);
       } else {
-        cout << "n1" << endl;
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
     } else {
@@ -203,21 +212,18 @@ void Program::checkLoginCommand(const vector<string> &input) {
     }
   } else if (input[0] == "PUT") {
     if (isCommandInList(input[1], PUT_COMMAND_LIST)) {
-      cout << "n2" << endl;
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
   } else if (input[0] == "GET") {
     if (isCommandInList(input[1], GET_COMMAND_LIST)) {
-      cout << "n3" << endl;
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
     }
   } else if (input[0] == "DELETE") {
     if (isCommandInList(input[1], DELETE_COMMAND_LIST)) {
-      cout << "n4" << endl;
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
@@ -244,10 +250,8 @@ void Program::login(const string id, const string password) {
                              studentsCSV.findField("sid", id, "major_id"),
                              studentsCSV.findField("sid", id, "semester"));
       permission = Permission::Student;
-      cout << "n1" << endl;
       cout << OK_OUTPUT << endl;
     } else {
-      cout << "n5" << endl;
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     }
   } else if (professorsCSV.isExists("pid", id)) {
@@ -256,20 +260,16 @@ void Program::login(const string id, const string password) {
                                professorsCSV.findField("pid", id, "major_id"),
                                professorsCSV.findField("pid", id, "position"));
       permission = Permission::Professor;
-      cout << "n2" << endl;
       cout << OK_OUTPUT << endl;
     } else {
-      cout << "n6" << endl;
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     }
   } else if (id == ADMIN_ID) {
     if (password == ADMIN_PASSWORD) {
       user_ptr = new Admin(id, ADMIN_NAME);
       permission = Permission::Admin;
-      cout << "n3" << endl;
       cout << OK_OUTPUT << endl;
     } else {
-      cout << "n7" << endl;
       cout << PERMISSIN_DENIED_OUTPUT << endl;
     }
   } else {
@@ -280,7 +280,6 @@ void Program::login(const string id, const string password) {
 void Program::logout() {
   permission = Permission::Guest;
   delete user_ptr;
-  cout << "n4" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -301,7 +300,6 @@ void Program::post(const string title, const string message) {
   for (const string &id : connections) {
     sendNotification(uid, user_ptr->getName(), id, "New Post");
   }
-  cout << "n5" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -316,10 +314,13 @@ void Program::deletePost(const string id) {
     return;
   }
   posts.writeMatrisToCSV();
-  cout << "n6" << endl;
   cout << OK_OUTPUT << endl;
 }
 void Program::printUserHeader(const string id) {
+  if (id == ADMIN_ID) {
+    cout << ADMIN_NAME << endl;
+    return;
+  }
   vector<string> user_row = {};
   vector<string> courses_name = {};
   try {
@@ -411,10 +412,15 @@ void Program::seeAllOfferCourses() {
 void Program::seeOfferCourses(const string &id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
-  vector<string> line = offer_courses.findRow("offer_course_id", id);
-  cout << line[0] << " " << coursesCSV.findField("cid", line[1], "name") << " "
-       << line[3] << " " << professorsCSV.findField("pid", line[2], "name")
-       << " " << line[4] << " " << line[5] << " " << line[6] << endl;
+  if (offer_courses.isExists("offer_course_id", id)) {
+    vector<string> line = offer_courses.findRow("offer_course_id", id);
+    cout << line[0] << " " << coursesCSV.findField("cid", line[1], "name")
+         << " " << line[3] << " "
+         << professorsCSV.findField("pid", line[2], "name") << " " << line[4]
+         << " " << line[5] << " " << line[6] << endl;
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
+  }
 }
 
 void Program::connect(const string id) {
@@ -442,7 +448,6 @@ void Program::connect(const string id) {
     cout << NOT_FOUND_OUTPUT << endl;
     return;
   }
-  cout << "n7" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -463,7 +468,9 @@ void Program::getNotification() {
     cout << EMPTY_OUTPUT << endl;
     return;
   }
-  for (const vector<string> &notification : notifications.bodyMatris()) {
+  vector<vector<string>> notification_body = notifications.bodyMatris();
+  reverse(notification_body.begin(), notification_body.end());
+  for (const vector<string> &notification : notification_body) {
     cout << notification[0] << " " << notification[1] << ": " << notification[2]
          << endl;
   }
@@ -499,7 +506,6 @@ void Program::courseOffer(string course_id, string professor_id,
   for (const string &id : connections) {
     sendNotification(professor_id, professor_name, id, "New Course Offering");
   }
-  cout << "n8" << endl;
   cout << OK_OUTPUT << endl;
 }
 
@@ -525,7 +531,6 @@ void Program::studentAddCourse(string id) {
       sendNotification(user_ptr->getId(), user_ptr->getName(), id,
                        "Get Course");
     }
-    cout << "n9" << endl;
     cout << OK_OUTPUT << endl;
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
@@ -544,13 +549,20 @@ void Program::studentDeleteCourse(string id) {
         remove(students_id.begin(), students_id.end(), user_ptr->getId()),
         students_id.end());
     if (size_students_id == students_id.size()) {
-      cout << BAD_REQUEST_OUTPUT << endl;
+      cout << NOT_FOUND_OUTPUT << endl;
     } else {
 
       offer_courses.updateFieldInMatris("offer_course_id", id, "students_id",
                                         connectString(students_id, ';'));
       offer_courses.writeMatrisToCSV();
-      cout << "n10" << endl;
+      CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH +
+                        INTERNAL_DATA_CONFIG_NAME);
+      vector<string> connections =
+          splitString(config.findField("uid", ADMIN_ID, "connections"), ';');
+      for (const string &id : connections) {
+        sendNotification(user_ptr->getId(), user_ptr->getName(), id,
+                         "Delete Course");
+      }
       cout << OK_OUTPUT << endl;
     }
   } else {
@@ -579,8 +591,16 @@ vector<size_t> Program::studentCousesIndex() {
 void Program::studentAllCourses() {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
+  if (offer_courses.isEmpty()) {
+    cout << EMPTY_OUTPUT << endl;
+    return;
+  }
   vector<vector<string>> body_offer_courses = offer_courses.bodyMatris();
   vector<size_t> userCoursesIndex = studentCousesIndex();
+  if (userCoursesIndex.empty()) {
+    cout << EMPTY_OUTPUT << endl;
+    return;
+  }
   for (const size_t &index : userCoursesIndex) {
     cout << body_offer_courses[index][0] << " "
          << coursesCSV.findField("cid", body_offer_courses[index][1], "name")
@@ -600,7 +620,7 @@ void Program::checkUserCommand(const vector<string> &input) {
       } else if (input[1] == "post") {
         string title = NONE_STRING;
         string message = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "title") {
             if (i + 1 < input.size()) {
               title = input[i + 1];
@@ -618,7 +638,7 @@ void Program::checkUserCommand(const vector<string> &input) {
         post(title, message);
       } else if (input[1] == "connect") {
         string id = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
             if (i + 1 < input.size()) {
               id = input[i + 1];
@@ -631,7 +651,6 @@ void Program::checkUserCommand(const vector<string> &input) {
         }
         connect(id);
       } else {
-        cout << "n8" << endl;
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
     } else {
@@ -641,7 +660,7 @@ void Program::checkUserCommand(const vector<string> &input) {
     if (isCommandInList(input[1], DELETE_COMMAND_LIST)) {
       if (input[1] == "post") {
         string id = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
             if (i + 1 < input.size()) {
               id = input[i + 1];
@@ -654,7 +673,6 @@ void Program::checkUserCommand(const vector<string> &input) {
         }
         deletePost(id);
       } else {
-        cout << "n9" << endl;
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
     } else {
@@ -666,7 +684,7 @@ void Program::checkUserCommand(const vector<string> &input) {
         getNotification();
       } else if (input[1] == "personal_page") {
         string id = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
             if (i + 1 < input.size()) {
               id = input[i + 1];
@@ -680,7 +698,7 @@ void Program::checkUserCommand(const vector<string> &input) {
         seePage(id);
       } else if (input[1] == "courses") {
         string id = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
             if (i + 1 < input.size()) {
               id = input[i + 1];
@@ -698,7 +716,7 @@ void Program::checkUserCommand(const vector<string> &input) {
       } else if (input[1] == "post") {
         string id = NONE_STRING;
         string post_id = NONE_STRING;
-        for (size_t i = 2; i < input.size(); i++) {
+        for (size_t i = 3; i < input.size(); i++) {
           if (input[i] == "id") {
             if (i + 1 < input.size()) {
               id = input[i + 1];
@@ -716,7 +734,6 @@ void Program::checkUserCommand(const vector<string> &input) {
         }
         getPost(id, post_id);
       } else {
-        cout << "n10" << endl;
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
     } else {
@@ -764,7 +781,7 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
   if (input[0] == "PUT") {
     if (input[1] == "my_courses") {
       string id = NONE_STRING;
-      for (size_t i = 2; i < input.size(); i++) {
+      for (size_t i = 3; i < input.size(); i++) {
         if (input[i] == "id") {
           if (i + 1 < input.size()) {
             id = input[i + 1];
@@ -794,7 +811,7 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
   } else if (input[0] == "DELETE") {
     if (input[1] == "my_courses") {
       string id = NONE_STRING;
-      for (size_t i = 2; i < input.size(); i++) {
+      for (size_t i = 3; i < input.size(); i++) {
         if (input[i] == "id") {
           if (i + 1 < input.size()) {
             id = input[i + 1];
@@ -825,7 +842,7 @@ void Program::checkAdminSpecificCommand(const vector<string> &input) {
       string time = NONE_STRING;
       string exam_date = NONE_STRING;
       string class_number = NONE_STRING;
-      for (size_t i = 2; i < input.size(); i++) {
+      for (size_t i = 3; i < input.size(); i++) {
         if (input[i] == "course_id") {
           if (i + 1 < input.size()) {
             course_id = input[i + 1];

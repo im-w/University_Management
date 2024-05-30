@@ -14,13 +14,14 @@ enum class Permission {
     Admin
 };
 
+const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
 const vector<string> POST_COMMAND_LIST = {"login","logout","post","connect","course_offer","my_courses"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post","my_courses"};
 const vector<string> GET_COMMAND_LIST = {"notification","my_courses","personal_page","courses","post"};
 const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
-const string ADMIN_NAME = "ADMIN";
+const string ADMIN_NAME = "UT_account";
 const string NONE_STRING = "NONE_STRING";
 const string OK_OUTPUT = "OK";
 const string EMPTY_OUTPUT = "Empty";
