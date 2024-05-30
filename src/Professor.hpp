@@ -14,7 +14,7 @@ protected:
 public:
   Professor(const string &id, const string &name, const string &major_id,
             const string &position);
-  void printInfo() ;
+  void printInfo();
 };
 
 #endif // PROFESSOR_HPP

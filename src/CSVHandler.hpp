@@ -16,8 +16,7 @@ public:
   bool isExists(const string column_key, const string value) const;
   vector<string> findRow(const string column_key,
                          const string column_value) const;
-  int findRowIndex(const string column_key,
-                         const string column_value) const;  
+  int findRowIndex(const string column_key, const string column_value) const;
   void printRow(const string column_key, const string column_value) const;
   size_t keyHeaderIndex(const string key) const;
   string findField(const string column_key, const string column_value,
@@ -34,6 +33,7 @@ public:
   vector<vector<string>> bodyMatris();
   void cleanBodyOfMatris();
   bool isEmpty();
+
 private:
   vector<vector<string>> csvToMatris();
 

@@ -6,9 +6,9 @@ Student::Student(const string &id, const string &name, const string &major_id,
     : User(id, name), major_id(major_id), semester(semester) {}
 
 void Student::printInfo() {
-    cout << "Student Information:" << endl;
-    cout << "ID: " << id << endl;
-    cout << "Name: " << name << endl;
-    cout << "Major ID: " << major_id << endl;
-    cout << "Semester: " << semester << endl;
+  cout << "Student Information:" << endl;
+  cout << "ID: " << id << endl;
+  cout << "Name: " << name << endl;
+  cout << "Major ID: " << major_id << endl;
+  cout << "Semester: " << semester << endl;
 }

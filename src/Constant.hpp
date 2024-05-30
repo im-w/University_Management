@@ -1,24 +1,21 @@
 #ifndef CONSTANT_HPP
 #define CONSTANT_HPP
 
-#include <vector>
 #include <string>
+#include <vector>
+
 
 using namespace std;
 
-
-enum class Permission {
-    Guest,
-    Student,
-    Professor,
-    Admin
-};
+enum class Permission { Guest, Student, Professor, Admin };
 
 const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
-const vector<string> POST_COMMAND_LIST = {"login","logout","post","connect","course_offer","my_courses"};
+const vector<string> POST_COMMAND_LIST = {
+    "login", "logout", "post", "connect", "course_offer", "my_courses"};
 const vector<string> PUT_COMMAND_LIST = {};
-const vector<string> DELETE_COMMAND_LIST = {"post","my_courses"};
-const vector<string> GET_COMMAND_LIST = {"notification","my_courses","personal_page","courses","post"};
+const vector<string> DELETE_COMMAND_LIST = {"post", "my_courses"};
+const vector<string> GET_COMMAND_LIST = {"notification", "my_courses",
+                                         "personal_page", "courses", "post"};
 const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
 const string ADMIN_NAME = "UT_account";
@@ -33,9 +30,5 @@ const string INTERNAL_DATA_POSTS_BASE_NAME = "-posts.csv";
 const string INTERNAL_DATA_NOTIFICATIONS_BASE_NAME = "-notifications.csv";
 const string INTERNAL_DATA_CONFIG_NAME = "configuration.csv";
 const string INTERNAL_DATA_OFFER_COURSES_NAME = "offer-courses.csv";
-
-
-
-
 
 #endif // CONSTANT_HPP
