@@ -358,7 +358,7 @@ void Program::printUserHeader(const string id) {
   if (courses_name.empty()) {
     cout << user_row[1] << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
-         << user_row[3] << endl;
+         << user_row[3] << " " << endl;
   } else {
     cout << user_row[1] << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
