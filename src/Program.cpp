@@ -774,7 +774,7 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
       if (id == NONE_STRING || (!isNormalNumber(id))) {
         cout << BAD_REQUEST_OUTPUT << endl;
         return;
-      } else if (isCourseOfferStudedntTimeOverlap(id)) {
+      } else if (isCourseOfferStudedntTimeOverlap(id) || (!isCourseOfferCanLearn(id))) {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
         return;
       }
@@ -985,6 +985,25 @@ bool Program::isCourseOfferStudedntTimeOverlap(const string &offer_course_id) {
           return true;
         }
       }
+    }
+  }
+  return false;
+}
+
+bool Program::isCourseOfferCanLearn(const string &offer_course_id) {
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                           INTERNAL_DATA_OFFER_COURSES_NAME);
+  string student_major_id =
+      studentsCSV.findField("sid", user_ptr->getId(), "major_id");
+  vector<string> course_major_ids = splitString(
+      coursesCSV.findField("cid",
+                           offer_courses.findField(
+                               "offer_course_id", offer_course_id, "course_id"),
+                           "majors_id"),
+      ';');
+  for (const string &course_major_id : course_major_ids) {
+    if (course_major_id == student_major_id) {
+      return true;
     }
   }
   return false;

@@ -68,6 +68,8 @@ private:
   bool isCourseOfferCanTeach(const string &professor_id,
                              const string &course_id);
 bool isCourseOfferStudedntTimeOverlap (const string &offer_course_id);
+bool isCourseOfferCanLearn(const string &offer_course_id);
+
 
 
   string majorsFile_path;
