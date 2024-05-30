@@ -774,7 +774,11 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
       if (id == NONE_STRING || (!isNormalNumber(id))) {
         cout << BAD_REQUEST_OUTPUT << endl;
         return;
+      } else if (isCourseOfferStudedntTimeOverlap(id)) {
+        cout << PERMISSIN_DENIED_OUTPUT << endl;
+        return;
       }
+
       studentAddCourse(id);
     } else {
       throw runtime_error("command not handle in this function");
@@ -854,7 +858,8 @@ void Program::checkAdminSpecificCommand(const vector<string> &input) {
         cout << BAD_REQUEST_OUTPUT << endl;
         return;
       } else if (isStudentIdValid(professor_id) || (professor_id == ADMIN_ID) ||
-                 isOfferProfessorTimeOverlap(time, professor_id)) {
+                 isCourseOfferProfessorTimeOverlap(time, professor_id) ||
+                 (!isCourseOfferCanTeach(professor_id, course_id))) {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
         return;
       } else if (!isCourseIdValid(course_id) ||
@@ -938,8 +943,8 @@ bool Program::isCourseIdValid(const string &id) {
   return false;
 }
 
-bool Program::isOfferProfessorTimeOverlap(const string &time,
-                                          const string &professor_id) {
+bool Program::isCourseOfferProfessorTimeOverlap(const string &time,
+                                                const string &professor_id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   vector<vector<string>> offer_courses_body = offer_courses.bodyMatris();
@@ -947,6 +952,38 @@ bool Program::isOfferProfessorTimeOverlap(const string &time,
     if (line[2] == professor_id) {
       if (isOverlap(parseTimeRange(time), parseTimeRange(line[4])) == true) {
         return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool Program::isCourseOfferCanTeach(const string &professor_id,
+                                    const string &course_id) {
+  string professor_major_id =
+      professorsCSV.findField("pid", professor_id, "major_id");
+  vector<string> course_major_ids =
+      splitString(coursesCSV.findField("cid", course_id, "majors_id"), ';');
+  for (const string &course_major_id : course_major_ids) {
+    if (course_major_id == professor_major_id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Program::isCourseOfferStudedntTimeOverlap(const string &offer_course_id) {
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                           INTERNAL_DATA_OFFER_COURSES_NAME);
+  vector<vector<string>> offer_courses_body = offer_courses.bodyMatris();
+  for (vector<string> &line : offer_courses_body) {
+    for (string &sid : splitString(line[7], ';')) {
+      if (sid == user_ptr->getId()) {
+        if (isOverlap(parseTimeRange(offer_courses.findField(
+                          "offer_course_id", offer_course_id, "time")),
+                      parseTimeRange(line[4])) == true) {
+          return true;
+        }
       }
     }
   }
