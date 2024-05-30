@@ -43,8 +43,7 @@ private:
                         const string send_to_id, const string massage);
   void getNotification();
   void courseOffer(string course_id, string professor_id, string capacity,
-                   string time, string examp_date,
-                   string class_number);
+                   string time, string examp_date, string class_number);
   void studentAddCourse(string id);
   void studentDeleteCourse(string id);
   vector<size_t> studentCousesIndex();
@@ -65,12 +64,11 @@ private:
   bool isCourseIdValid(const string &id);
   bool isCourseOfferProfessorTimeOverlap(const string &time,
                                          const string &professor_id);
-  bool isCourseOfferCanTeach(const string &professor_id,
-                             const string &course_id);
-bool isCourseOfferStudedntTimeOverlap (const string &offer_course_id);
-bool isCourseOfferCanLearn(const string &offer_course_id);
-
-
+  bool isCourseOfferProfessorMajorOk(const string &professor_id,
+                                     const string &course_id);
+  bool isCourseOfferStudedntTimeOverlap(const string &offer_course_id);
+  bool isCourseOfferStudentMajorOk(const string &offer_course_id);
+  bool isCourseOfferStudentCreditOk(const string &offer_course_id);
 
   string majorsFile_path;
   string studentsFile_path;

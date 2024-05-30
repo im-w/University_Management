@@ -774,7 +774,9 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
       if (id == NONE_STRING || (!isNormalNumber(id))) {
         cout << BAD_REQUEST_OUTPUT << endl;
         return;
-      } else if (isCourseOfferStudedntTimeOverlap(id) || (!isCourseOfferCanLearn(id))) {
+      } else if (isCourseOfferStudedntTimeOverlap(id) ||
+                 (!isCourseOfferStudentMajorOk(id)) ||
+                 (!isCourseOfferStudentCreditOk(id))) {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
         return;
       }
@@ -859,7 +861,7 @@ void Program::checkAdminSpecificCommand(const vector<string> &input) {
         return;
       } else if (isStudentIdValid(professor_id) || (professor_id == ADMIN_ID) ||
                  isCourseOfferProfessorTimeOverlap(time, professor_id) ||
-                 (!isCourseOfferCanTeach(professor_id, course_id))) {
+                 (!isCourseOfferProfessorMajorOk(professor_id, course_id))) {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
         return;
       } else if (!isCourseIdValid(course_id) ||
@@ -958,8 +960,8 @@ bool Program::isCourseOfferProfessorTimeOverlap(const string &time,
   return false;
 }
 
-bool Program::isCourseOfferCanTeach(const string &professor_id,
-                                    const string &course_id) {
+bool Program::isCourseOfferProfessorMajorOk(const string &professor_id,
+                                            const string &course_id) {
   string professor_major_id =
       professorsCSV.findField("pid", professor_id, "major_id");
   vector<string> course_major_ids =
@@ -990,7 +992,7 @@ bool Program::isCourseOfferStudedntTimeOverlap(const string &offer_course_id) {
   return false;
 }
 
-bool Program::isCourseOfferCanLearn(const string &offer_course_id) {
+bool Program::isCourseOfferStudentMajorOk(const string &offer_course_id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   string student_major_id =
@@ -1007,4 +1009,18 @@ bool Program::isCourseOfferCanLearn(const string &offer_course_id) {
     }
   }
   return false;
+}
+
+bool Program::isCourseOfferStudentCreditOk(const string &offer_course_id) {
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                           INTERNAL_DATA_OFFER_COURSES_NAME);
+  string student_semester =
+      studentsCSV.findField("sid", user_ptr->getId(), "semester");
+
+  string prerequisite = coursesCSV.findField(
+      "cid",
+      offer_courses.findField("offer_course_id", offer_course_id, "course_id"),
+      "prerequisite");
+
+  return (stoi(student_semester) >= stoi(prerequisite));
 }
