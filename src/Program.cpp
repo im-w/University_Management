@@ -90,7 +90,8 @@ bool Program::createFileIfNotExists(const string &filename) {
 }
 
 void Program::setupConfigFile(CSVHandler &File) {
-  vector<string> row = {"uid", "last_post_id", "connections"};
+  vector<string> row = {"uid", "last_post_id", "connections",
+                        "profile_photo_path"};
   File.addRowToMatris(row);
   File.writeMatrisToCSV();
 }
@@ -119,14 +120,14 @@ void Program::setupUser(const string &id, CSVHandler &config) {
     if (id != ADMIN_ID) {
       config.appendFieldInMatris("uid", ADMIN_ID, "connections", ";" + id);
     }
-    vector<string> row = {id, "0", "0"};
+    vector<string> row = {id, "0", "0", NONE_STRING};
     config.addRowToMatris(row);
     config.writeMatrisToCSV();
   }
 }
 
 void Program::setupPostsFile(CSVHandler &File) {
-  vector<string> row = {"post_id", "title", "massage", "attach"};
+  vector<string> row = {"post_id", "title", "massage", "attach_path"};
   File.addRowToMatris(row);
   File.writeMatrisToCSV();
 }
@@ -293,7 +294,7 @@ void Program::post(const string title, const string message,
                    INTERNAL_DATA_POSTS_BASE_NAME);
   vector<string> row = {};
   if (attach == NONE_STRING) {
-    row = {last_post_id, title, message, ""};
+    row = {last_post_id, title, message, NONE_STRING};
   } else {
     row = {last_post_id, title, message, attach};
   }
@@ -458,6 +459,13 @@ void Program::connect(const string id) {
     return;
   }
   cout << OK_OUTPUT << endl;
+}
+
+void Program::addProfilePhoto(const string photo) {
+  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+  config.updateFieldInMatris("uid", user_ptr->getId(), "profile_photo_path",
+                             photo);
+  config.writeMatrisToCSV();
 }
 
 void Program::sendNotification(const string sender_id, const string sender_name,
@@ -630,6 +638,8 @@ void Program::checkUserCommand(const vector<string> &input) {
         postPostCommand(input);
       } else if (input[1] == CONNECT_SUB_COMMAND) {
         postConnectCommand(input);
+      } else if (input[1] == PROFILE_PHOTO_SUB_COMMAND) {
+        postProfilePhotoCommand(input);
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
@@ -931,6 +941,22 @@ void Program::postConnectCommand(const vector<string> &input) {
     return;
   }
   connect(id);
+}
+
+void Program::postProfilePhotoCommand(const vector<string> &input) {
+  string photo = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "photo") {
+      if (i + 1 < input.size()) {
+        photo = input[i + 1];
+      }
+    }
+  }
+  if (photo == NONE_STRING) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  addProfilePhoto(photo);
 }
 
 void Program::deletePostCommand(const vector<string> &input) {

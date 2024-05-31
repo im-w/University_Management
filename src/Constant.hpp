@@ -8,9 +8,9 @@ using namespace std;
 
 enum class Permission { Guest, Student, Professor, Admin };
 
-const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = false;
+const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
 const vector<string> POST_COMMAND_LIST = {
-    "login", "logout", "post", "connect", "course_offer", "my_courses"};
+    "login", "logout", "post", "connect", "course_offer", "my_courses","profile_photo"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post", "my_courses"};
 const vector<string> GET_COMMAND_LIST = {"notification", "my_courses",
@@ -37,6 +37,7 @@ const string LOGIN_SUB_COMMAND = "login";
 const string LOGOUT_SUB_COMMAND = "logout";
 const string POST_SUB_COMMAND = "post";
 const string CONNECT_SUB_COMMAND = "connect";
+const string PROFILE_PHOTO_SUB_COMMAND = "profile_photo";
 const string NOTIFICATION_SUB_COMMAND = "notification";
 const string PERSONAL_PAGE_SUB_COMMAND = "personal_page";
 const string COURSES_SUB_COMMAND = "courses";

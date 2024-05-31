@@ -39,6 +39,7 @@ private:
   void seeAllOfferCourses();
   void seeOfferCourses(const string &id);
   void connect(const string id);
+  void addProfilePhoto(const string photo);
   void sendNotification(const string sender_id, const string sender_name,
                         const string send_to_id, const string massage);
   void getNotification();
@@ -71,6 +72,7 @@ private:
   bool isCourseOfferStudentCreditOk(const string &offer_course_id);
   void postPostCommand(const vector<string> &input);
   void postConnectCommand(const vector<string> &input);
+  void postProfilePhotoCommand(const vector<string> &input);
   void deletePostCommand(const vector<string> &input);
   void getPersonalPageCommand(const vector<string> &input);
   void getCoursesCommand(const vector<string> &input);
