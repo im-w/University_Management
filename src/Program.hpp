@@ -31,7 +31,7 @@ private:
                        const vector<string> &command_list);
   void login(const string id, const string password);
   void logout();
-  void post(const string title, const string message);
+  void post(const string title, const string message, const string attach);
   void deletePost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);

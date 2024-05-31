@@ -1,2 +1,3 @@
-post_id,title,massage
+post_id,title,massage,attach
 1,post from UT account,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+2,test image,this is for test post image function,./image.png

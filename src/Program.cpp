@@ -126,7 +126,7 @@ void Program::setupUser(const string &id, CSVHandler &config) {
 }
 
 void Program::setupPostsFile(CSVHandler &File) {
-  vector<string> row = {"post_id", "title", "massage"};
+  vector<string> row = {"post_id", "title", "massage", "attach"};
   File.addRowToMatris(row);
   File.writeMatrisToCSV();
 }
@@ -283,14 +283,23 @@ void Program::logout() {
   cout << OK_OUTPUT << endl;
 }
 
-void Program::post(const string title, const string message) {
+void Program::post(const string title, const string message,
+                   const string attach = NONE_STRING) {
   CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
   string uid = user_ptr->getId();
   string last_post_id = config.findField("uid", uid, "last_post_id");
   last_post_id = to_string(stoi(last_post_id) + 1);
   CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + uid +
                    INTERNAL_DATA_POSTS_BASE_NAME);
-  vector<string> row = {last_post_id, title, message};
+  vector<string> row = {};
+  if (attach == NONE_STRING) {
+    row = {last_post_id, title, message, ""};
+  } else {
+    row = {last_post_id, title, message, attach};
+  }
+  if (row.empty()) {
+    throw runtime_error("row you want add created by post function is empty");
+  }
   posts.addRowToMatris(row);
   posts.writeMatrisToCSV();
   config.updateFieldInMatris("uid", uid, "last_post_id", last_post_id);
@@ -721,7 +730,7 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
   }
 }
 void Program::checkProfessorSpecificCommand() {
-  
+
   throw runtime_error("command not handle in this function");
 }
 void Program::checkAdminSpecificCommand(const vector<string> &input) {
@@ -885,6 +894,7 @@ bool Program::isCourseOfferStudentCreditOk(const string &offer_course_id) {
 void Program::postPostCommand(const vector<string> &input) {
   string title = NONE_STRING;
   string message = NONE_STRING;
+  string attach = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
     if (input[i] == "title") {
       if (i + 1 < input.size()) {
@@ -894,13 +904,17 @@ void Program::postPostCommand(const vector<string> &input) {
       if (i + 1 < input.size()) {
         message = input[i + 1];
       }
+    } else if (input[i] == "image") {
+      if (i + 1 < input.size()) {
+        attach = input[i + 1];
+      }
     }
   }
   if (title == NONE_STRING || message == NONE_STRING) {
     cout << BAD_REQUEST_OUTPUT << endl;
     return;
   }
-  post(title, message);
+  post(title, message, attach);
 }
 
 void Program::postConnectCommand(const vector<string> &input) {
