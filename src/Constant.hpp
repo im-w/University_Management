@@ -8,6 +8,8 @@ using namespace std;
 
 enum class Permission { Guest, Student, Professor, Admin };
 
+const string NONE_STRING = "NONE_STRING";
+
 const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
 const string POSTS_DATA_POST_TYPE = "post";
 
@@ -21,21 +23,26 @@ const vector<string> GET_COMMAND_LIST = {"notification", "my_courses",
 const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
 const string ADMIN_NAME = "UT_account";
-const string NONE_STRING = "NONE_STRING";
+
 const string OK_OUTPUT = "OK";
 const string EMPTY_OUTPUT = "Empty";
 const string NOT_FOUND_OUTPUT = "Not Found";
 const string BAD_REQUEST_OUTPUT = "Bad Request";
 const string PERMISSIN_DENIED_OUTPUT = "Permission Denied";
+
 const string INTERNAL_DATA_DIRECTORY_PATH = "./Internal_Databases/";
 const string INTERNAL_DATA_POSTS_BASE_NAME = "-posts.csv";
 const string INTERNAL_DATA_NOTIFICATIONS_BASE_NAME = "-notifications.csv";
 const string INTERNAL_DATA_CONFIG_NAME = "configuration.csv";
 const string INTERNAL_DATA_OFFER_COURSES_NAME = "offer-courses.csv";
+const string INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME = "course-";
+
+
 const string POST_COMMAND = "POST";
 const string DELETE_COMMAND = "DELETE";
 const string GET_COMMAND = "GET";
 const string PUT_COMMAND = "PUT";
+
 const string LOGIN_SUB_COMMAND = "login";
 const string LOGOUT_SUB_COMMAND = "logout";
 const string POST_SUB_COMMAND = "post";

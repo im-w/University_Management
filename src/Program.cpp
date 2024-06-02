@@ -509,15 +509,10 @@ void Program::courseOffer(string course_id, string professor_id,
   if (offer_course_ids.size() != 0) {
     last_offer_course_id = offer_course_ids.back();
   }
-
-  vector<string> row = {to_string((stoi(last_offer_course_id) + 1)),
-                        course_id,
-                        professor_id,
-                        capacity,
-                        time,
-                        exam_date,
-                        class_number,
-                        "0"};
+  string offer_course_id = to_string((stoi(last_offer_course_id) + 1));
+  vector<string> row = {offer_course_id, course_id, professor_id,
+                        capacity,        time,      exam_date,
+                        class_number,    "0"};
   offer_courses.addRowToMatris(row);
   offer_courses.writeMatrisToCSV();
   string professor_name = professorsCSV.findField("pid", professor_id, "name");
@@ -526,6 +521,14 @@ void Program::courseOffer(string course_id, string professor_id,
       splitString(config.findField("uid", ADMIN_ID, "connections"), ';');
   for (const string &id : connections) {
     sendNotification(professor_id, professor_name, id, "New Course Offering");
+  }
+  if (!createFileIfNotExists(INTERNAL_DATA_DIRECTORY_PATH +
+                             INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME +
+                             offer_course_id + INTERNAL_DATA_POSTS_BASE_NAME)) {
+    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH +
+                     INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME +
+                     offer_course_id + INTERNAL_DATA_POSTS_BASE_NAME);
+    setupPostsFile(posts);
   }
   cout << OK_OUTPUT << endl;
 }
