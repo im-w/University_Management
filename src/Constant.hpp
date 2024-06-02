@@ -9,6 +9,9 @@ using namespace std;
 enum class Permission { Guest, Student, Professor, Admin };
 
 const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
+const string POSTS_DATA_POST_TYPE = "post";
+
+
 const vector<string> POST_COMMAND_LIST = {
     "login", "logout", "post", "connect", "course_offer", "my_courses","profile_photo"};
 const vector<string> PUT_COMMAND_LIST = {};

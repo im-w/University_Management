@@ -35,7 +35,7 @@ void Program::run() {
   }
 }
 
-void Program::test() {}
+void Program::test() {} //? delete when code completed
 
 void Program::setup() {
   if (!createFileIfNotExists(INTERNAL_DATA_DIRECTORY_PATH +
@@ -127,7 +127,7 @@ void Program::setupUser(const string &id, CSVHandler &config) {
 }
 
 void Program::setupPostsFile(CSVHandler &File) {
-  vector<string> row = {"post_id", "title", "massage", "attach_path"};
+  vector<string> row = {"post_id", "title", "massage", "attach_path", "type"};
   File.addRowToMatris(row);
   File.writeMatrisToCSV();
 }
@@ -294,9 +294,9 @@ void Program::post(const string title, const string message,
                    INTERNAL_DATA_POSTS_BASE_NAME);
   vector<string> row = {};
   if (attach == NONE_STRING) {
-    row = {last_post_id, title, message, NONE_STRING};
+    row = {last_post_id, title, message, NONE_STRING, POSTS_DATA_POST_TYPE};
   } else {
-    row = {last_post_id, title, message, attach};
+    row = {last_post_id, title, message, attach, POSTS_DATA_POST_TYPE};
   }
   if (row.empty()) {
     throw runtime_error("row you want add created by post function is empty");
@@ -383,7 +383,9 @@ void Program::seePage(const string id) {
     vector<vector<string>> all_posts_matris = posts.bodyMatris();
     reverse(all_posts_matris.begin(), all_posts_matris.end());
     for (const vector<string> &post : all_posts_matris) {
-      cout << post[0] << " \"" << post[1] << "\"" << endl;
+      if (post[4] == POSTS_DATA_POST_TYPE) {
+        cout << post[0] << " \"" << post[1] << "\"" << endl;
+      }
     }
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
@@ -397,8 +399,10 @@ void Program::getPost(const string id, const string post_id) {
     if (posts.isExists("post_id", post_id)) {
       printUserHeader(id);
       vector<string> post = posts.findRow("post_id", post_id);
-      cout << post[0] << " \"" << post[1] << "\"" << " \"" << post[2] << "\""
-           << endl;
+      if (post[4] == POSTS_DATA_POST_TYPE) {
+        cout << post[0] << " \"" << post[1] << "\"" << " \"" << post[2] << "\""
+             << endl;
+      }
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
       return;
