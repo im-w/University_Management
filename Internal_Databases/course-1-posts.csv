@@ -1,1 +1,2 @@
-post_id,title,massage,attach_path,type
+post_id,title,massage,attach_path,type,author_name
+1,test,this is somthing new,NONE_STRING,post,ali

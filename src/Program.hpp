@@ -23,6 +23,7 @@ private:
   void setupOfferCoursesFile(CSVHandler &File);
   void setupUser(const string &id, CSVHandler &config);
   void setupPostsFile(CSVHandler &File);
+  void setupCoursePostsFile(CSVHandler &File);
   void setupNotificationsFile(CSVHandler &File);
   vector<string> getInputVectorFromTerminal();
   void parseInput(const vector<string> &input);
@@ -35,6 +36,7 @@ private:
   void deletePost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);
+  void seeChannelPage(const string id);
   void getPost(const string id, const string post_id);
   void seeAllOfferCourses();
   void seeOfferCourses(const string &id);
@@ -63,6 +65,7 @@ private:
   bool isStudentIdValid(const string &id);
   bool isProfessorIdValid(const string &id);
   bool isCourseIdValid(const string &id);
+  bool isOfferCourseIdValid(const string &id);
   bool isCourseOfferProfessorTimeOverlap(const string &time,
                                          const string &professor_id);
   bool isCourseOfferProfessorMajorOk(const string &professor_id,
@@ -75,6 +78,7 @@ private:
   void postProfilePhotoCommand(const vector<string> &input);
   void deletePostCommand(const vector<string> &input);
   void getPersonalPageCommand(const vector<string> &input);
+  void getCourseChannelCommand(const vector<string> &input);
   void getCoursesCommand(const vector<string> &input);
   void getPostCommand(const vector<string> &input);
   void studentPutMycourseCommand(const vector<string> &input);
