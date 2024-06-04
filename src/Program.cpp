@@ -133,11 +133,11 @@ void Program::setupPostsFile(CSVHandler &File) {
 }
 
 void Program::setupCoursePostsFile(CSVHandler &File) {
-  vector<string> row = {"post_id", "title", "massage", "attach_path", "type","author_name"};
+  vector<string> row = {"post_id",     "title", "massage",
+                        "attach_path", "type",  "author_name"};
   File.addRowToMatris(row);
   File.writeMatrisToCSV();
 }
-
 
 void Program::setupNotificationsFile(CSVHandler &File) {
   vector<string> row = {"uid", "name", "massage"};
@@ -403,7 +403,8 @@ void Program::seePage(const string id) {
 void Program::seeChannelPage(const string id) {
   if (isOfferCourseIdValid(id)) {
     seeOfferCourses(id);
-    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME + id +
+    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH +
+                     INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME + id +
                      INTERNAL_DATA_POSTS_BASE_NAME);
     vector<vector<string>> all_posts_matris = posts.bodyMatris();
     reverse(all_posts_matris.begin(), all_posts_matris.end());
@@ -426,6 +427,27 @@ void Program::getPost(const string id, const string post_id) {
       if (post[4] == POSTS_DATA_POST_TYPE) {
         cout << post[0] << " \"" << post[1] << "\"" << " \"" << post[2] << "\""
              << endl;
+      }
+    } else {
+      cout << NOT_FOUND_OUTPUT << endl;
+      return;
+    }
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
+    return;
+  }
+}
+void Program::getChannelPost(const string id, const string post_id) {
+  if (isOfferCourseIdValid(id)) {
+    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH +
+                     INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME + id +
+                     INTERNAL_DATA_POSTS_BASE_NAME);
+    if (posts.isExists("post_id", post_id)) {
+      seeOfferCourses(id);
+      vector<string> post = posts.findRow("post_id", post_id);
+      if (post[4] == POSTS_DATA_POST_TYPE) {
+        cout << post[0] << " " << post[5] << " \"" << post[1] << "\"" << " \""
+             << post[2] << "\"" << endl;
       }
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
@@ -699,6 +721,8 @@ void Program::checkUserCommand(const vector<string> &input) {
         getPostCommand(input);
       } else if (input[1] == COURSE_CHANNEL_SUB_COMMAND) {
         getCourseChannelCommand(input);
+      } else if (input[1] == COURSE_POST_SUB_COMMAND) {
+        getCoursePostCommand(input);
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
@@ -854,7 +878,7 @@ bool Program::isCourseIdValid(const string &id) {
   return false;
 }
 bool Program::isOfferCourseIdValid(const string &id) {
-    CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+  CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   if (offer_courses.isExists("offer_course_id", id)) {
     return true;
@@ -1046,6 +1070,28 @@ void Program::getCourseChannelCommand(const vector<string> &input) {
     return;
   }
   seeChannelPage(id);
+}
+
+void Program::getCoursePostCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  string post_id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    } else if (input[i] == "post_id") {
+      if (i + 1 < input.size()) {
+        post_id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || post_id == NONE_STRING || (!isNormalNumber(id)) ||
+      (!isNormalNumber(post_id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  getChannelPost(id, post_id);
 }
 
 void Program::getCoursesCommand(const vector<string> &input) {

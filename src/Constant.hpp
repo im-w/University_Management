@@ -19,9 +19,9 @@ const vector<string> POST_COMMAND_LIST = {
     "course_offer", "my_courses", "profile_photo"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post", "my_courses"};
-const vector<string> GET_COMMAND_LIST = {"notification",  "my_courses",
-                                         "personal_page", "courses",
-                                         "post",          "course_channel"};
+const vector<string> GET_COMMAND_LIST = {
+    "notification", "my_courses",     "personal_page", "courses",
+    "post",         "course_channel", "course_post"};
 const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
 const string ADMIN_NAME = "UT_account";
@@ -55,5 +55,6 @@ const string COURSES_SUB_COMMAND = "courses";
 const string MY_COURSES_SUB_COMMAND = "my_courses";
 const string COURSE_OFFER_SUB_COMMAND = "course_offer";
 const string COURSE_CHANNEL_SUB_COMMAND = "course_channel";
+const string COURSE_POST_SUB_COMMAND = "course_post";
 
 #endif // CONSTANT_HPP

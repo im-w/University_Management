@@ -38,6 +38,7 @@ private:
   void seePage(const string id);
   void seeChannelPage(const string id);
   void getPost(const string id, const string post_id);
+  void getChannelPost(const string id, const string post_id);
   void seeAllOfferCourses();
   void seeOfferCourses(const string &id);
   void connect(const string id);
@@ -79,6 +80,7 @@ private:
   void deletePostCommand(const vector<string> &input);
   void getPersonalPageCommand(const vector<string> &input);
   void getCourseChannelCommand(const vector<string> &input);
+  void getCoursePostCommand(const vector<string> &input);
   void getCoursesCommand(const vector<string> &input);
   void getPostCommand(const vector<string> &input);
   void studentPutMycourseCommand(const vector<string> &input);
