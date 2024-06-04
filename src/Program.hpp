@@ -33,7 +33,9 @@ private:
   void login(const string id, const string password);
   void logout();
   void post(const string title, const string message, const string attach);
-  void channelPost(const string offer_course_id, const string title, const string message, const string attach);
+  void postTaForm(const string offer_course_id, const string message);
+  void channelPost(const string offer_course_id, const string title,
+                   const string message, const string attach);
   void deletePost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);
@@ -58,11 +60,11 @@ private:
   void checkProfessorCommand(const vector<string> &input);
   void checkAdminCommand(const vector<string> &input);
   void checkStudentSpecificCommand(const vector<string> &input);
-  void checkProfessorSpecificCommand();
+  void checkProfessorSpecificCommand(const vector<string> &input);
   void checkAdminSpecificCommand(const vector<string> &input);
   vector<string> splitString(const string &input, const char delimiter);
   string connectString(const vector<string> &input, const char delimiter);
-  bool isExists(const string member, const vector <string> vector);
+  bool isExists(const string member, const vector<string> vector);
   bool isNormalNumber(const string &str);
   bool isUserIdValid(const string &id);
   bool isStudentIdValid(const string &id);
@@ -88,6 +90,7 @@ private:
   void getPostCommand(const vector<string> &input);
   void studentPutMycourseCommand(const vector<string> &input);
   void studentDeleteCourseCommand(const vector<string> &input);
+  void professorPostTaFormCommand(const vector<string> &input);
   void AdminPostOffercourseCommand(const vector<string> &input);
 
   string majorsFile_path;

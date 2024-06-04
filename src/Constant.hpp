@@ -13,10 +13,11 @@ const string NONE_STRING = "NONE_STRING";
 const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = false;
 
 const string POSTS_DATA_POST_TYPE = "post";
+const string POSTS_DATA_TA_FORM_TYPE = "ta_form";
 
 const vector<string> POST_COMMAND_LIST = {
-    "login",        "logout",     "post",         "connect",
-    "course_offer", "my_courses", "profile_photo", "course_post"};
+    "login",      "logout",        "post",        "connect", "course_offer",
+    "my_courses", "profile_photo", "course_post", "ta_form"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post", "my_courses"};
 const vector<string> GET_COMMAND_LIST = {
@@ -56,5 +57,6 @@ const string MY_COURSES_SUB_COMMAND = "my_courses";
 const string COURSE_OFFER_SUB_COMMAND = "course_offer";
 const string COURSE_CHANNEL_SUB_COMMAND = "course_channel";
 const string COURSE_POST_SUB_COMMAND = "course_post";
+const string TA_FORM_SUB_COMMAND = "ta_form";
 
 #endif // CONSTANT_HPP
