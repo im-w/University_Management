@@ -21,24 +21,24 @@ public:
   size_t keyHeaderIndex(const string key) const;
   string findField(const string column_key, const string column_value,
                    const string field_header) const;
-  void updateFieldInMatris(const string column_key, const string column_value,
+  void updateFieldInMatrix(const string column_key, const string column_value,
                            const string field_header,
                            const string new_field_value);
-  void appendFieldInMatris(const string column_key, const string column_value,
+  void appendFieldInMatrix(const string column_key, const string column_value,
                            const string field_header,
                            const string append_value);
-  void writeMatrisToCSV();
-  void addRowToMatris(vector<string> row);
-  void deleteRowOfMatris(const string column_key, const string column_value);
-  vector<vector<string>> bodyMatris();
-  void cleanBodyOfMatris();
+  void writeMatrixToCSV();
+  void addRowToMatrix(vector<string> row);
+  void deleteRowOfMatrix(const string column_key, const string column_value);
+  vector<vector<string>> bodyMatrix();
+  void cleanBodyOfMatrix();
   bool isEmpty();
 
 private:
-  vector<vector<string>> csvToMatris();
+  vector<vector<string>> csvToMatrix();
 
   string file_path;
-  vector<vector<string>> matris;
+  vector<vector<string>> matrix;
 };
 
 #endif // CSVHANDLER_HPP

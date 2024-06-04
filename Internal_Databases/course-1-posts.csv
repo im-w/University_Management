@@ -1,4 +1,1 @@
-post_id,title,massage,attach_path,type,author_name
-1,Homework 6,Phase 2,NONE_STRING,post,UT_account
-2,Homewrk 6,Phase 2,NONE_STRING,post,UT_account
-3,Homewrk 6,Phase 2,NONE_STRING,post,UT_account
+post_id,title,message,attach_path,type,author_name

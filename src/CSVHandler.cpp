@@ -10,11 +10,11 @@
 using namespace std;
 
 CSVHandler::CSVHandler(string _file_path) : file_path(_file_path) {
-  matris = CSVHandler::csvToMatris();
+  matrix = CSVHandler::csvToMatrix();
 }
 
-vector<vector<string>> CSVHandler::csvToMatris() {
-  vector<vector<string>> result_matris;
+vector<vector<string>> CSVHandler::csvToMatrix() {
+  vector<vector<string>> result_matrix;
   ifstream file(file_path);
   if (!file.is_open()) {
     throw runtime_error("CSV file not found. file_path: " + file_path);
@@ -27,16 +27,16 @@ vector<vector<string>> CSVHandler::csvToMatris() {
     while (getline(ss, word, ',')) {
       line_vector.push_back(word);
     }
-    result_matris.push_back(line_vector);
+    result_matrix.push_back(line_vector);
   }
   file.close();
 
-  return result_matris;
+  return result_matrix;
 }
 
 void CSVHandler::printData() const {
-  for (vector<vector<string>>::const_iterator it = matris.begin();
-       it != matris.end(); ++it) {
+  for (vector<vector<string>>::const_iterator it = matrix.begin();
+       it != matrix.end(); ++it) {
     const vector<string> &vec = *it;
     for (vector<string>::const_iterator jt = vec.begin(); jt != vec.end();
          ++jt) {
@@ -49,9 +49,9 @@ void CSVHandler::printData() const {
 
 string CSVHandler::size() const {
   string result;
-  for (size_t i = 0; i < matris.size(); ++i) {
+  for (size_t i = 0; i < matrix.size(); ++i) {
     result += "Row " + to_string(i + 1) + " has " +
-              to_string(matris[i].size()) + " columns.\n";
+              to_string(matrix[i].size()) + " columns.\n";
   }
   return result;
 }
@@ -59,22 +59,22 @@ string CSVHandler::size() const {
 vector<string> CSVHandler::findColumn(const string key) const {
   vector<string> result_vector;
 
-  if (matris.empty() || matris[0].empty()) {
+  if (matrix.empty() || matrix[0].empty()) {
     return result_vector;
   }
 
-  auto it = find(matris[0].begin(), matris[0].end(), key);
+  auto it = find(matrix[0].begin(), matrix[0].end(), key);
 
-  if (it == matris[0].end()) {
+  if (it == matrix[0].end()) {
     throw runtime_error("Key not found in header. key: " + key);
     return result_vector;
   }
 
-  size_t index = distance(matris[0].begin(), it);
+  size_t index = distance(matrix[0].begin(), it);
 
-  for (size_t i = 1; i < matris.size(); ++i) {
-    if (index < matris[i].size()) {
-      result_vector.push_back(matris[i][index]);
+  for (size_t i = 1; i < matrix.size(); ++i) {
+    if (index < matrix[i].size()) {
+      result_vector.push_back(matrix[i][index]);
     } else {
       throw runtime_error("Index out of bounds. index: " + to_string(index) +
                           " key: " + key);
@@ -103,7 +103,7 @@ bool CSVHandler::isExists(const string column_key, const string value) const {
 vector<string> CSVHandler::findRow(const string column_key,
                                    const string column_value) const {
   int index = findRowIndex(column_key, column_value);
-  return matris[index];
+  return matrix[index];
 }
 
 int CSVHandler::findRowIndex(const string column_key,
@@ -130,7 +130,7 @@ void CSVHandler::printRow(const string column_key,
 }
 
 size_t CSVHandler::keyHeaderIndex(const string key) const {
-  vector<string> header = matris[0];
+  vector<string> header = matrix[0];
   size_t index = 0;
   for (const string &field : header) {
     if (field == key)
@@ -145,14 +145,14 @@ string CSVHandler::findField(const string column_key, const string column_value,
   return findRow(column_key, column_value)[keyHeaderIndex(field_header)];
 }
 
-void CSVHandler::writeMatrisToCSV() {
+void CSVHandler::writeMatrixToCSV() {
   ofstream file(file_path);
   if (!file.is_open()) {
     cerr << "Failed to open file: " << file_path << endl;
     return;
   }
 
-  for (const auto &row : matris) {
+  for (const auto &row : matrix) {
     for (size_t i = 0; i < row.size(); ++i) {
       file << row[i];
       if (i < row.size() - 1) {
@@ -168,49 +168,49 @@ void CSVHandler::writeMatrisToCSV() {
   }
 }
 
-void CSVHandler::updateFieldInMatris(const string column_key,
+void CSVHandler::updateFieldInMatrix(const string column_key,
                                      const string column_value,
                                      const string field_header,
                                      const string new_field_value) {
   int index = findRowIndex(column_key, column_value);
-  matris[index][keyHeaderIndex(field_header)] = new_field_value;
+  matrix[index][keyHeaderIndex(field_header)] = new_field_value;
 }
 
-void CSVHandler::appendFieldInMatris(const string column_key,
+void CSVHandler::appendFieldInMatrix(const string column_key,
                                      const string column_value,
                                      const string field_header,
                                      const string append_value) {
   int index = findRowIndex(column_key, column_value);
-  matris[index][keyHeaderIndex(field_header)] += append_value;
+  matrix[index][keyHeaderIndex(field_header)] += append_value;
 }
 
-void CSVHandler::addRowToMatris(vector<string> row) {
-  if (!matris.empty()) {
-    if (matris[0].size() != row.size()) {
+void CSVHandler::addRowToMatrix(vector<string> row) {
+  if (!matrix.empty()) {
+    if (matrix[0].size() != row.size()) {
       runtime_error("Size of row isn't matching with the header of the CSV.");
     }
   }
-  matris.push_back(row);
+  matrix.push_back(row);
 }
 
-void CSVHandler::deleteRowOfMatris(const string column_key,
+void CSVHandler::deleteRowOfMatrix(const string column_key,
                                    const string column_value) {
   int index = findRowIndex(column_key, column_value);
-  matris.erase(matris.begin() + (index));
+  matrix.erase(matrix.begin() + (index));
 }
 
-vector<vector<string>> CSVHandler::bodyMatris() {
+vector<vector<string>> CSVHandler::bodyMatrix() {
   vector<vector<string>> output;
-  for (size_t i = 1; i < matris.size(); i++) {
-    output.push_back(matris[i]);
+  for (size_t i = 1; i < matrix.size(); i++) {
+    output.push_back(matrix[i]);
   }
   return output;
 }
 
-void CSVHandler::cleanBodyOfMatris() {
-  if (matris.size() > 1) {
-    matris.erase(matris.begin() + 1, matris.end());
+void CSVHandler::cleanBodyOfMatrix() {
+  if (matrix.size() > 1) {
+    matrix.erase(matrix.begin() + 1, matrix.end());
   }
 }
 
-bool CSVHandler::isEmpty() { return (bodyMatris().empty()); }
+bool CSVHandler::isEmpty() { return (bodyMatrix().empty()); }

@@ -10,7 +10,7 @@ enum class Permission { Guest, Student, Professor, Admin };
 
 const string NONE_STRING = "NONE_STRING";
 
-const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = false;
+const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
 
 const string POSTS_DATA_POST_TYPE = "post";
 const string POSTS_DATA_TA_FORM_TYPE = "ta_form";
@@ -31,7 +31,7 @@ const string OK_OUTPUT = "OK";
 const string EMPTY_OUTPUT = "Empty";
 const string NOT_FOUND_OUTPUT = "Not Found";
 const string BAD_REQUEST_OUTPUT = "Bad Request";
-const string PERMISSIN_DENIED_OUTPUT = "Permission Denied";
+const string PERMISSION_DENIED_OUTPUT = "Permission Denied";
 
 const string INTERNAL_DATA_DIRECTORY_PATH = "./Internal_Databases/";
 const string INTERNAL_DATA_POSTS_BASE_NAME = "-posts.csv";

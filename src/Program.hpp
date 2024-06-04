@@ -50,10 +50,10 @@ private:
                         const string send_to_id, const string massage);
   void getNotification();
   void courseOffer(string course_id, string professor_id, string capacity,
-                   string time, string examp_date, string class_number);
+                   string time, string exam_date, string class_number);
   void studentAddCourse(string id);
   void studentDeleteCourse(string id);
-  vector<size_t> studentCousesIndex();
+  vector<size_t> studentCoursesIndex();
   void studentAllCourses();
   void checkUserCommand(const vector<string> &input);
   void checkStudentCommand(const vector<string> &input);
@@ -75,11 +75,11 @@ private:
                                          const string &professor_id);
   bool isCourseOfferProfessorMajorOk(const string &professor_id,
                                      const string &course_id);
-  bool isCourseOfferStudedntTimeOverlap(const string &offer_course_id);
+  bool isCourseOfferStudentTimeOverlap(const string &offer_course_id);
   bool isCourseOfferStudentMajorOk(const string &offer_course_id);
   bool isCourseOfferStudentCreditOk(const string &offer_course_id);
   void postPostCommand(const vector<string> &input);
-  void postcoursePostCommand(const vector<string> &input);
+  void postCoursePostCommand(const vector<string> &input);
   void postConnectCommand(const vector<string> &input);
   void postProfilePhotoCommand(const vector<string> &input);
   void deletePostCommand(const vector<string> &input);
@@ -88,10 +88,10 @@ private:
   void getCoursePostCommand(const vector<string> &input);
   void getCoursesCommand(const vector<string> &input);
   void getPostCommand(const vector<string> &input);
-  void studentPutMycourseCommand(const vector<string> &input);
+  void studentPutMyCourseCommand(const vector<string> &input);
   void studentDeleteCourseCommand(const vector<string> &input);
   void professorPostTaFormCommand(const vector<string> &input);
-  void AdminPostOffercourseCommand(const vector<string> &input);
+  void AdminPostOfferCourseCommand(const vector<string> &input);
 
   string majorsFile_path;
   string studentsFile_path;

@@ -1,5 +1,1 @@
-post_id,title,massage,attach_path,type
-1,TA form for Operating System course;2,TA for designing project,NONE_STRING,ta_form
-2,TA form for Operating System course;2,TA for designing project,NONE_STRING,ta_form
-3,TA form for Operating System course;2,TA for designing project,NONE_STRING,ta_form
-4,jinx,TTA l,NONE_STRING,post
+post_id,title,message,attach_path,type
