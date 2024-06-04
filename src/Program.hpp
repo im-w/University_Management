@@ -33,6 +33,7 @@ private:
   void login(const string id, const string password);
   void logout();
   void post(const string title, const string message, const string attach);
+  void channelPost(const string offer_course_id, const string title, const string message, const string attach);
   void deletePost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);
@@ -61,6 +62,7 @@ private:
   void checkAdminSpecificCommand(const vector<string> &input);
   vector<string> splitString(const string &input, const char delimiter);
   string connectString(const vector<string> &input, const char delimiter);
+  bool isExists(const string member, const vector <string> vector);
   bool isNormalNumber(const string &str);
   bool isUserIdValid(const string &id);
   bool isStudentIdValid(const string &id);
@@ -75,6 +77,7 @@ private:
   bool isCourseOfferStudentMajorOk(const string &offer_course_id);
   bool isCourseOfferStudentCreditOk(const string &offer_course_id);
   void postPostCommand(const vector<string> &input);
+  void postcoursePostCommand(const vector<string> &input);
   void postConnectCommand(const vector<string> &input);
   void postProfilePhotoCommand(const vector<string> &input);
   void deletePostCommand(const vector<string> &input);

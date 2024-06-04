@@ -96,9 +96,10 @@ void Program::setupConfigFile(CSVHandler &File) {
   File.writeMatrisToCSV();
 }
 void Program::setupOfferCoursesFile(CSVHandler &File) {
-  vector<string> row = {"offer_course_id", "course_id",  "professor_id",
-                        "capacity",        "time",       "exam_date",
-                        "class_number",    "students_id"};
+  vector<string> row = {"offer_course_id", "course_id",   "professor_id",
+                        "capacity",        "time",        "exam_date",
+                        "class_number",    "students_id", "authors_id",
+                        "last_post_id"};
   File.addRowToMatris(row);
   File.writeMatrisToCSV();
 }
@@ -320,6 +321,66 @@ void Program::post(const string title, const string message,
   cout << OK_OUTPUT << endl;
 }
 
+void Program::channelPost(const string offer_course_id, const string title,
+                          const string message,
+                          const string attach = NONE_STRING) {
+  if (isOfferCourseIdValid(offer_course_id)) {
+    CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                             INTERNAL_DATA_OFFER_COURSES_NAME);
+    string uid = user_ptr->getId();
+    bool has_permission = isExists(
+        uid, splitString(offer_courses.findField("offer_course_id",
+                                                 offer_course_id, "authors_id"),
+                         ';'));
+    if (!has_permission) {
+      cout << PERMISSIN_DENIED_OUTPUT << endl;
+      return;
+    }
+    string last_post_id = offer_courses.findField(
+        "offer_course_id", offer_course_id, "last_post_id");
+    last_post_id = to_string(stoi(last_post_id) + 1);
+    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH +
+                     INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME +
+                     offer_course_id + INTERNAL_DATA_POSTS_BASE_NAME);
+    vector<string> row = {};
+    if (attach == NONE_STRING) {
+      row = {
+          last_post_id,       title, message, NONE_STRING, POSTS_DATA_POST_TYPE,
+          user_ptr->getName()};
+    } else {
+      row = {last_post_id,       title, message, attach, POSTS_DATA_POST_TYPE,
+             user_ptr->getName()};
+    }
+    if (row.empty()) {
+      throw runtime_error("row you want add created by post function is empty");
+    }
+    posts.addRowToMatris(row);
+    posts.writeMatrisToCSV();
+    offer_courses.updateFieldInMatris("offer_course_id", offer_course_id,
+                                      "last_post_id", last_post_id);
+    offer_courses.writeMatrisToCSV();
+    vector<string> connections =
+        splitString(offer_courses.findField("offer_course_id", offer_course_id,
+                                            "students_id"),
+                    ';');
+    for (const string &id : connections) {
+      if (id == uid) {
+        continue;
+      }
+      sendNotification(offer_course_id,
+                       coursesCSV.findField(
+                           "cid",
+                           offer_courses.findField(
+                               "offer_course_id", offer_course_id, "course_id"),
+                           "name"),
+                       id, "New Course Post");
+    }
+    cout << OK_OUTPUT << endl;
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
+  }
+}
+
 void Program::deletePost(const string id) {
   string uid = user_ptr->getId();
   CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + uid +
@@ -402,6 +463,23 @@ void Program::seePage(const string id) {
 
 void Program::seeChannelPage(const string id) {
   if (isOfferCourseIdValid(id)) {
+    CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                             INTERNAL_DATA_OFFER_COURSES_NAME);
+    string uid = user_ptr->getId();
+    bool has_permission =
+        isExists(uid, splitString(offer_courses.findField("offer_course_id", id,
+                                                          "authors_id"),
+                                  ';'));
+    if (!has_permission) {
+      has_permission =
+          isExists(uid, splitString(offer_courses.findField("offer_course_id",
+                                                            id, "students_id"),
+                                    ';'));
+    }
+    if (!has_permission) {
+      cout << PERMISSIN_DENIED_OUTPUT << endl;
+      return;
+    }
     seeOfferCourses(id);
     CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH +
                      INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME + id +
@@ -439,6 +517,23 @@ void Program::getPost(const string id, const string post_id) {
 }
 void Program::getChannelPost(const string id, const string post_id) {
   if (isOfferCourseIdValid(id)) {
+    CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                             INTERNAL_DATA_OFFER_COURSES_NAME);
+    string uid = user_ptr->getId();
+    bool has_permission =
+        isExists(uid, splitString(offer_courses.findField("offer_course_id", id,
+                                                          "authors_id"),
+                                  ';'));
+    if (!has_permission) {
+      has_permission =
+          isExists(uid, splitString(offer_courses.findField("offer_course_id",
+                                                            id, "students_id"),
+                                    ';'));
+    }
+    if (!has_permission) {
+      cout << PERMISSIN_DENIED_OUTPUT << endl;
+      return;
+    }
     CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH +
                      INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME + id +
                      INTERNAL_DATA_POSTS_BASE_NAME);
@@ -556,9 +651,16 @@ void Program::courseOffer(string course_id, string professor_id,
     last_offer_course_id = offer_course_ids.back();
   }
   string offer_course_id = to_string((stoi(last_offer_course_id) + 1));
-  vector<string> row = {offer_course_id, course_id, professor_id,
-                        capacity,        time,      exam_date,
-                        class_number,    "0"};
+  vector<string> row = {offer_course_id,
+                        course_id,
+                        professor_id,
+                        capacity,
+                        time,
+                        exam_date,
+                        class_number,
+                        "0",
+                        ("0;" + professor_id),
+                        "0"};
   offer_courses.addRowToMatris(row);
   offer_courses.writeMatrisToCSV();
   string professor_name = professorsCSV.findField("pid", professor_id, "name");
@@ -693,6 +795,8 @@ void Program::checkUserCommand(const vector<string> &input) {
         postConnectCommand(input);
       } else if (input[1] == PROFILE_PHOTO_SUB_COMMAND) {
         postProfilePhotoCommand(input);
+      } else if (input[1] == COURSE_POST_SUB_COMMAND) {
+        postcoursePostCommand(input);
       } else {
         cout << PERMISSIN_DENIED_OUTPUT << endl;
       }
@@ -837,6 +941,15 @@ string Program::connectString(const vector<string> &input,
   }
 
   return result;
+}
+
+bool Program::isExists(const string member, const vector<string> vector) {
+  for (const string &str : vector) {
+    if (str == member) {
+      return true;
+    }
+  }
+  return false;
 }
 
 bool Program::isNormalNumber(const string &str) {
@@ -990,6 +1103,37 @@ void Program::postPostCommand(const vector<string> &input) {
     return;
   }
   post(title, message, attach);
+}
+void Program::postcoursePostCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  string title = NONE_STRING;
+  string message = NONE_STRING;
+  string attach = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    } else if (input[i] == "title") {
+      if (i + 1 < input.size()) {
+        title = input[i + 1];
+      }
+    } else if (input[i] == "message") {
+      if (i + 1 < input.size()) {
+        message = input[i + 1];
+      }
+    } else if (input[i] == "image") {
+      if (i + 1 < input.size()) {
+        attach = input[i + 1];
+      }
+    }
+  }
+  if (title == NONE_STRING || message == NONE_STRING || id == NONE_STRING ||
+      id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  channelPost(id, title, message, attach);
 }
 
 void Program::postConnectCommand(const vector<string> &input) {

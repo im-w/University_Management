@@ -16,7 +16,7 @@ const string POSTS_DATA_POST_TYPE = "post";
 
 const vector<string> POST_COMMAND_LIST = {
     "login",        "logout",     "post",         "connect",
-    "course_offer", "my_courses", "profile_photo"};
+    "course_offer", "my_courses", "profile_photo", "course_post"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post", "my_courses"};
 const vector<string> GET_COMMAND_LIST = {
