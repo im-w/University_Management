@@ -25,6 +25,7 @@ private:
   void setupPostsFile(CSVHandler &File);
   void setupCoursePostsFile(CSVHandler &File);
   void setupNotificationsFile(CSVHandler &File);
+  void setupTaFormFile(CSVHandler &File);
   vector<string> getInputVectorFromTerminal();
   void parseInput(const vector<string> &input);
   void checkLoginCommand(const vector<string> &input);
@@ -33,10 +34,11 @@ private:
   void login(const string id, const string password);
   void logout();
   void post(const string title, const string message, const string attach);
-  void postTaForm(const string offer_course_id, const string message);
+  void professorPostTaForm(const string offer_course_id, const string message);
   void channelPost(const string offer_course_id, const string title,
                    const string message, const string attach);
   void deletePost(const string id);
+  void professorCloseTaPost(const string id);
   void printUserHeader(const string id);
   void seePage(const string id);
   void seeChannelPage(const string id);
@@ -53,6 +55,7 @@ private:
                    string time, string exam_date, string class_number);
   void studentAddCourse(string id);
   void studentDeleteCourse(string id);
+  void studentAddTaRequest(string professor_id, string form_id);
   vector<size_t> studentCoursesIndex();
   void studentAllCourses();
   void checkUserCommand(const vector<string> &input);
@@ -90,7 +93,9 @@ private:
   void getPostCommand(const vector<string> &input);
   void studentPutMyCourseCommand(const vector<string> &input);
   void studentDeleteCourseCommand(const vector<string> &input);
+  void studentPostTaRequestCommand(const vector<string> &input);
   void professorPostTaFormCommand(const vector<string> &input);
+  void professorPostCloseTaFormCommand(const vector<string> &input);
   void AdminPostOfferCourseCommand(const vector<string> &input);
 
   string majorsFile_path;

@@ -31,7 +31,9 @@ void Program::run() {
   while (open) {
     test();
     vector<string> input = getInputVectorFromTerminal();
-    parseInput(input);
+    if (!input.empty()) {
+      parseInput(input);
+    }
   }
 }
 
@@ -142,6 +144,12 @@ void Program::setupCoursePostsFile(CSVHandler &File) {
 
 void Program::setupNotificationsFile(CSVHandler &File) {
   vector<string> row = {"uid", "name", "message"};
+  File.addRowToMatrix(row);
+  File.writeMatrixToCSV();
+}
+
+void Program::setupTaFormFile(CSVHandler &File) {
+  vector<string> row = {"sid", "name", "semester", "status"};
   File.addRowToMatrix(row);
   File.writeMatrixToCSV();
 }
@@ -381,15 +389,17 @@ void Program::channelPost(const string offer_course_id, const string title,
   }
 }
 
-void Program::postTaForm(const string offer_course_id, const string message) {
-  if (!isOfferCourseIdValid(offer_course_id)){
+void Program::professorPostTaForm(const string offer_course_id,
+                                  const string message) {
+  if (!isOfferCourseIdValid(offer_course_id)) {
     cout << NOT_FOUND_OUTPUT << endl;
     return;
   }
   string uid = user_ptr->getId();
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
-  if (uid != offer_courses.findField("offer_course_id",offer_course_id,"professor_id")) {
+  if (uid != offer_courses.findField("offer_course_id", offer_course_id,
+                                     "professor_id")) {
     cout << PERMISSION_DENIED_OUTPUT << endl;
     return;
   }
@@ -405,8 +415,13 @@ void Program::postTaForm(const string offer_course_id, const string message) {
                                                   "offer_course_id",
                                                   offer_course_id, "course_id"),
                                               "name") +
-                         " course;"+ offer_course_id),
-                        message, NONE_STRING, POSTS_DATA_TA_FORM_TYPE};
+                         " course;" + offer_course_id),
+                        message,
+                        (INTERNAL_DATA_DIRECTORY_PATH +
+                         INTERNAL_DATA_TA_FORM_PROFESSOR_ID_PRE_NAME + uid +
+                         INTERNAL_DATA_TA_FORM_FORM_ID_PRE_NAME + last_post_id +
+                         INTERNAL_DATA_TA_FORM_BASE_NAME),
+                        POSTS_DATA_TA_FORM_TYPE};
   if (row.empty()) {
     throw runtime_error("row you want add created by post function is empty");
   }
@@ -414,6 +429,16 @@ void Program::postTaForm(const string offer_course_id, const string message) {
   posts.writeMatrixToCSV();
   config.updateFieldInMatrix("uid", uid, "last_post_id", last_post_id);
   config.writeMatrixToCSV();
+  if (!createFileIfNotExists(INTERNAL_DATA_DIRECTORY_PATH +
+                             INTERNAL_DATA_TA_FORM_PROFESSOR_ID_PRE_NAME + uid +
+                             INTERNAL_DATA_TA_FORM_FORM_ID_PRE_NAME +
+                             last_post_id + INTERNAL_DATA_TA_FORM_BASE_NAME)) {
+    CSVHandler ta_form(INTERNAL_DATA_DIRECTORY_PATH +
+                       INTERNAL_DATA_TA_FORM_PROFESSOR_ID_PRE_NAME + uid +
+                       INTERNAL_DATA_TA_FORM_FORM_ID_PRE_NAME + last_post_id +
+                       INTERNAL_DATA_TA_FORM_BASE_NAME);
+    setupTaFormFile(ta_form);
+  }
   vector<string> connections =
       splitString(config.findField("uid", uid, "connections"), ';');
   for (const string &id : connections) {
@@ -501,6 +526,62 @@ void Program::seePage(const string id) {
     }
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
+  }
+}
+
+void Program::professorCloseTaPost(const string post_id) {
+  CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + user_ptr->getId() +
+                   INTERNAL_DATA_POSTS_BASE_NAME);
+  if (posts.isExists("post_id", post_id)) {
+    string path = posts.findField("post_id", post_id, "attach_path");
+    CSVHandler ta_form(path);
+    CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                             INTERNAL_DATA_OFFER_COURSES_NAME);
+    vector<vector<string>> ta_form_body = ta_form.bodyMatrix();
+    cout << "We have received " << ta_form_body.size()
+         << " requests for the teaching assistant position" << endl;
+    string input_status = NONE_STRING;
+    for (vector<string> &row : ta_form_body) {
+      if (row[3] == NONE_STRING) {
+        input_status = NONE_STRING;
+        while (input_status != ACCEPT_TA_REQUEST_STRING &&
+               input_status != REJECT_TA_REQUEST_STRING) {
+          cout << row[0] << " " << row[1] << " " << row[2] << " : ";
+          cin >> input_status;
+        }
+        ta_form.updateFieldInMatrix("sid", row[0], "status", input_status);
+      }
+      string offer_course_id =
+          splitString(posts.findField("post_id", post_id, "title"), ':')[1];
+
+      if (input_status == ACCEPT_TA_REQUEST_STRING) {
+        sendNotification(
+            offer_course_id,
+            coursesCSV.findField("cid",
+                                 offer_courses.findField("offer_course_id",
+                                                         offer_course_id,
+                                                         "course_id"),
+                                 "name"),
+            row[0],
+            "Your request to be a teaching assistant has been accepted.");
+      } else if (input_status == REJECT_TA_REQUEST_STRING) {
+        sendNotification(
+            offer_course_id,
+            coursesCSV.findField("cid",
+                                 offer_courses.findField("offer_course_id",
+                                                         offer_course_id,
+                                                         "course_id"),
+                                 "name"),
+            row[0],
+            "Your request to be a teaching assistant has been rejected.");
+      }
+    }
+    ta_form.writeMatrixToCSV();
+    deletePost(post_id);
+    return;
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
+    return;
   }
 }
 
@@ -659,6 +740,7 @@ void Program::addProfilePhoto(const string photo) {
   config.updateFieldInMatrix("uid", user_ptr->getId(), "profile_photo_path",
                              photo);
   config.writeMatrixToCSV();
+  cout << OK_OUTPUT << endl;
 }
 
 void Program::sendNotification(const string sender_id, const string sender_name,
@@ -787,6 +869,49 @@ void Program::studentDeleteCourse(string id) {
     }
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
+  }
+}
+
+void Program::studentAddTaRequest(string professor_id, string form_id) {
+  if (isProfessorIdValid(professor_id)) {
+    CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + professor_id +
+                     INTERNAL_DATA_POSTS_BASE_NAME);
+    if (posts.isExists("post_id", form_id)) {
+      vector<string> post = posts.findRow("post_id", form_id);
+      if (post[4] == POSTS_DATA_TA_FORM_TYPE) {
+        CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                                 INTERNAL_DATA_OFFER_COURSES_NAME);
+        const string offer_course_id = splitString(post[1], ';')[1];
+        string prerequisite = coursesCSV.findField(
+            "cid",
+            offer_courses.findField("offer_course_id", offer_course_id,
+                                    "course_id"),
+            "prerequisite");
+        string student_semester =
+            studentsCSV.findField("sid", user_ptr->getId(), "semester");
+
+        if (stoi(student_semester) >= stoi(prerequisite)) {
+          CSVHandler ta_form(post[3]);
+          vector<string> row = {user_ptr->getId(), user_ptr->getName(),
+                                student_semester, NONE_STRING};
+          ta_form.addRowToMatrix(row);
+          ta_form.writeMatrixToCSV();
+          cout << OK_OUTPUT << endl;
+        } else {
+          cout << PERMISSION_DENIED_OUTPUT << endl;
+          return;
+        }
+      } else {
+        cout << NOT_FOUND_OUTPUT << endl;
+        return;
+      }
+    } else {
+      cout << NOT_FOUND_OUTPUT << endl;
+      return;
+    }
+  } else {
+    cout << NOT_FOUND_OUTPUT << endl;
+    return;
   }
 }
 
@@ -926,7 +1051,13 @@ void Program::checkAdminCommand(const vector<string> &input) {
   }
 }
 void Program::checkStudentSpecificCommand(const vector<string> &input) {
-  if (input[0] == PUT_COMMAND) {
+  if (input[0] == POST_COMMAND) {
+    if (input[1] == TA_REQUEST_SUB_COMMAND) {
+      studentPostTaRequestCommand(input);
+    } else {
+      throw runtime_error("command not handle in this function");
+    }
+  } else if (input[0] == PUT_COMMAND) {
     if (input[1] == MY_COURSES_SUB_COMMAND) {
       studentPutMyCourseCommand(input);
     } else {
@@ -952,6 +1083,8 @@ void Program::checkProfessorSpecificCommand(const vector<string> &input) {
   if (input[0] == POST_COMMAND) {
     if (input[1] == TA_FORM_SUB_COMMAND) {
       professorPostTaFormCommand(input);
+    } else if (input[1] == CLOSE_TA_FORM_SUB_COMMAND) {
+      professorPostCloseTaFormCommand(input);
     } else {
       throw runtime_error("command not handle in this function");
     }
@@ -1372,6 +1505,28 @@ void Program::studentDeleteCourseCommand(const vector<string> &input) {
   studentDeleteCourse(id);
 }
 
+void Program::studentPostTaRequestCommand(const vector<string> &input) {
+  string professor_id = NONE_STRING;
+  string form_id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "professor_id") {
+      if (i + 1 < input.size()) {
+        professor_id = input[i + 1];
+      }
+    } else if (input[i] == "form_id") {
+      if (i + 1 < input.size()) {
+        form_id = input[i + 1];
+      }
+    }
+  }
+  if (professor_id == NONE_STRING || form_id == NONE_STRING ||
+      (!isNormalNumber(professor_id)) || (!isNormalNumber(form_id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  studentAddTaRequest(professor_id, form_id);
+}
+
 void Program::professorPostTaFormCommand(const vector<string> &input) {
   string offer_course_id = NONE_STRING;
   string message = NONE_STRING;
@@ -1390,7 +1545,23 @@ void Program::professorPostTaFormCommand(const vector<string> &input) {
     cout << BAD_REQUEST_OUTPUT << endl;
     return;
   }
-  postTaForm(offer_course_id, message);
+  professorPostTaForm(offer_course_id, message);
+}
+
+void Program::professorPostCloseTaFormCommand(const vector<string> &input) {
+  string id = NONE_STRING;
+  for (size_t i = 3; i < input.size(); i++) {
+    if (input[i] == "id") {
+      if (i + 1 < input.size()) {
+        id = input[i + 1];
+      }
+    }
+  }
+  if (id == NONE_STRING || (!isNormalNumber(id))) {
+    cout << BAD_REQUEST_OUTPUT << endl;
+    return;
+  }
+  professorCloseTaPost(id);
 }
 
 void Program::AdminPostOfferCourseCommand(const vector<string> &input) {

@@ -15,6 +15,7 @@ public:
   Student(const string &id, const string &name, const string &major_id,
           const string &semester);
   void printInfo();
+  string getSemester();
 };
 
 #endif // STUDENT_HPP

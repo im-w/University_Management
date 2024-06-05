@@ -17,12 +17,13 @@ const string POSTS_DATA_TA_FORM_TYPE = "ta_form";
 
 const vector<string> POST_COMMAND_LIST = {
     "login",      "logout",        "post",        "connect", "course_offer",
-    "my_courses", "profile_photo", "course_post", "ta_form"};
+    "my_courses", "profile_photo", "course_post", "ta_form", "ta_request"};
 const vector<string> PUT_COMMAND_LIST = {};
 const vector<string> DELETE_COMMAND_LIST = {"post", "my_courses"};
 const vector<string> GET_COMMAND_LIST = {
     "notification", "my_courses",     "personal_page", "courses",
     "post",         "course_channel", "course_post"};
+
 const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
 const string ADMIN_NAME = "UT_account";
@@ -33,12 +34,18 @@ const string NOT_FOUND_OUTPUT = "Not Found";
 const string BAD_REQUEST_OUTPUT = "Bad Request";
 const string PERMISSION_DENIED_OUTPUT = "Permission Denied";
 
+const string ACCEPT_TA_REQUEST_STRING ="accept";
+const string REJECT_TA_REQUEST_STRING ="reject";
+
 const string INTERNAL_DATA_DIRECTORY_PATH = "./Internal_Databases/";
 const string INTERNAL_DATA_POSTS_BASE_NAME = "-posts.csv";
 const string INTERNAL_DATA_NOTIFICATIONS_BASE_NAME = "-notifications.csv";
 const string INTERNAL_DATA_CONFIG_NAME = "configuration.csv";
 const string INTERNAL_DATA_OFFER_COURSES_NAME = "offer-courses.csv";
 const string INTERNAL_DATA_OFFER_COURSES_POSTS_PRE_NAME = "course-";
+const string INTERNAL_DATA_TA_FORM_FORM_ID_PRE_NAME = "-post-";
+const string INTERNAL_DATA_TA_FORM_PROFESSOR_ID_PRE_NAME = "professor-";
+const string INTERNAL_DATA_TA_FORM_BASE_NAME = "-ta-form.csv";
 
 const string POST_COMMAND = "POST";
 const string DELETE_COMMAND = "DELETE";
@@ -58,5 +65,7 @@ const string COURSE_OFFER_SUB_COMMAND = "course_offer";
 const string COURSE_CHANNEL_SUB_COMMAND = "course_channel";
 const string COURSE_POST_SUB_COMMAND = "course_post";
 const string TA_FORM_SUB_COMMAND = "ta_form";
+const string TA_REQUEST_SUB_COMMAND = "ta_request";
+const string CLOSE_TA_FORM_SUB_COMMAND = "close_ta_form";
 
 #endif // CONSTANT_HPP

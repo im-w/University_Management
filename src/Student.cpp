@@ -12,3 +12,5 @@ void Student::printInfo() {
   cout << "Major ID: " << major_id << endl;
   cout << "Semester: " << semester << endl;
 }
+
+string Student::getSemester() { return semester; }
