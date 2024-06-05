@@ -10,7 +10,7 @@ enum class Permission { Guest, Student, Professor, Admin };
 
 const string NONE_STRING = "NONE_STRING";
 
-const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
+const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = false;
 
 const string POSTS_DATA_POST_TYPE = "post";
 const string POSTS_DATA_TA_FORM_TYPE = "ta_form";

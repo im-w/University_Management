@@ -533,52 +533,67 @@ void Program::professorCloseTaPost(const string post_id) {
   CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + user_ptr->getId() +
                    INTERNAL_DATA_POSTS_BASE_NAME);
   if (posts.isExists("post_id", post_id)) {
-    string path = posts.findField("post_id", post_id, "attach_path");
-    CSVHandler ta_form(path);
-    CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
-                             INTERNAL_DATA_OFFER_COURSES_NAME);
-    vector<vector<string>> ta_form_body = ta_form.bodyMatrix();
-    cout << "We have received " << ta_form_body.size()
-         << " requests for the teaching assistant position" << endl;
-    string input_status = NONE_STRING;
-    for (vector<string> &row : ta_form_body) {
-      if (row[3] == NONE_STRING) {
-        input_status = NONE_STRING;
-        while (input_status != ACCEPT_TA_REQUEST_STRING &&
-               input_status != REJECT_TA_REQUEST_STRING) {
-          cout << row[0] << " " << row[1] << " " << row[2] << " : ";
-          cin >> input_status;
+    if (posts.findField("post_id", post_id, "type") ==
+        POSTS_DATA_TA_FORM_TYPE) {
+      string path = posts.findField("post_id", post_id, "attach_path");
+      CSVHandler ta_form(path);
+      CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
+                               INTERNAL_DATA_OFFER_COURSES_NAME);
+      vector<vector<string>> ta_form_body = ta_form.bodyMatrix();
+      cout << "We have received " << ta_form_body.size()
+           << " requests for the teaching assistant position" << endl;
+      string input_status = NONE_STRING;
+      for (vector<string> &row : ta_form_body) {
+        if (row[3] == NONE_STRING) {
+          input_status = NONE_STRING;
+          while (input_status != ACCEPT_TA_REQUEST_STRING &&
+                 input_status != REJECT_TA_REQUEST_STRING) {
+            cout << row[0] << " " << row[1] << " " << row[2] << " : ";
+            getline(cin, input_status);
+          }
+          ta_form.updateFieldInMatrix("sid", row[0], "status", input_status);
         }
-        ta_form.updateFieldInMatrix("sid", row[0], "status", input_status);
-      }
-      string offer_course_id =
-          splitString(posts.findField("post_id", post_id, "title"), ':')[1];
+        string offer_course_id =
+            splitString(posts.findField("post_id", post_id, "title"), ';')[1];
 
-      if (input_status == ACCEPT_TA_REQUEST_STRING) {
-        sendNotification(
-            offer_course_id,
-            coursesCSV.findField("cid",
-                                 offer_courses.findField("offer_course_id",
-                                                         offer_course_id,
-                                                         "course_id"),
-                                 "name"),
-            row[0],
-            "Your request to be a teaching assistant has been accepted.");
-      } else if (input_status == REJECT_TA_REQUEST_STRING) {
-        sendNotification(
-            offer_course_id,
-            coursesCSV.findField("cid",
-                                 offer_courses.findField("offer_course_id",
-                                                         offer_course_id,
-                                                         "course_id"),
-                                 "name"),
-            row[0],
-            "Your request to be a teaching assistant has been rejected.");
+        if (input_status == ACCEPT_TA_REQUEST_STRING) {
+          sendNotification(
+              offer_course_id,
+              coursesCSV.findField("cid",
+                                   offer_courses.findField("offer_course_id",
+                                                           offer_course_id,
+                                                           "course_id"),
+                                   "name"),
+              row[0],
+              "Your request to be a teaching assistant has been accepted.");
+          offer_courses.appendFieldInMatrix("offer_course_id", offer_course_id,
+                                            "authors_id",
+                                            (";" + user_ptr->getId()));
+          offer_courses.writeMatrixToCSV();
+        } else if (input_status == REJECT_TA_REQUEST_STRING) {
+          sendNotification(
+              offer_course_id,
+              coursesCSV.findField("cid",
+                                   offer_courses.findField("offer_course_id",
+                                                           offer_course_id,
+                                                           "course_id"),
+                                   "name"),
+              row[0],
+              "Your request to be a teaching assistant has been rejected.");
+        }
       }
+      ta_form.writeMatrixToCSV();
+      try {
+        posts.deleteRowOfMatrix("post_id", post_id);
+      } catch (const exception &e) {
+        cout << NOT_FOUND_OUTPUT << endl;
+        return;
+      }
+      posts.writeMatrixToCSV();
+      return;
+    } else {
+      cout << NOT_FOUND_OUTPUT << endl;
     }
-    ta_form.writeMatrixToCSV();
-    deletePost(post_id);
-    return;
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
     return;
@@ -827,8 +842,8 @@ void Program::studentAddCourse(string id) {
                                       (";" + user_ptr->getId()));
     offer_courses.writeMatrixToCSV();
     CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
-    vector<string> connections =
-        splitString(config.findField("uid", ADMIN_ID, "connections"), ';');
+    vector<string> connections = splitString(
+        config.findField("uid", user_ptr->getId(), "connections"), ';');
     for (const string &id : connections) {
       sendNotification(user_ptr->getId(), user_ptr->getName(), id,
                        "Get Course");
@@ -837,6 +852,7 @@ void Program::studentAddCourse(string id) {
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
   }
+  cout << NOT_FOUND_OUTPUT << endl;
 }
 
 void Program::studentDeleteCourse(string id) {
