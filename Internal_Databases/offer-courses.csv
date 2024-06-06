@@ -1,3 +1,2 @@
 offer_course_id,course_id,professor_id,capacity,time,exam_date,class_number,students_id,authors_id,last_post_id
-1,1,810420436,70,Sunday:13-15,1403/4/4,3,0;810102342,0;810420436,2
-2,4,810420436,70,Sunday:15-16,1403/4/6,3,0;810102342,0;810420436,2
+1,1,810201475,70,Sunday:3-5,1403/4/4,2,0,0;810201475;810201475,1

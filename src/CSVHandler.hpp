@@ -9,16 +9,11 @@ using namespace std;
 class CSVHandler {
 public:
   CSVHandler(string _file_path);
-  void printData() const;
-  string size() const;
+  void writeMatrixToCSV();
   vector<string> findColumn(const string key) const;
-  void printColumn(const string key) const;
-  bool isExists(const string column_key, const string value) const;
   vector<string> findRow(const string column_key,
                          const string column_value) const;
   int findRowIndex(const string column_key, const string column_value) const;
-  void printRow(const string column_key, const string column_value) const;
-  size_t keyHeaderIndex(const string key) const;
   string findField(const string column_key, const string column_value,
                    const string field_header) const;
   void updateFieldInMatrix(const string column_key, const string column_value,
@@ -27,12 +22,17 @@ public:
   void appendFieldInMatrix(const string column_key, const string column_value,
                            const string field_header,
                            const string append_value);
-  void writeMatrixToCSV();
+  bool isEmpty();
+  bool isExists(const string column_key, const string value) const;
+  string size() const;
+  size_t keyHeaderIndex(const string key) const;
   void addRowToMatrix(vector<string> row);
   void deleteRowOfMatrix(const string column_key, const string column_value);
   vector<vector<string>> bodyMatrix();
   void cleanBodyOfMatrix();
-  bool isEmpty();
+  void printColumn(const string key) const;
+  void printRow(const string column_key, const string column_value) const;
+  void printData() const;
 
 private:
   vector<vector<string>> csvToMatrix();

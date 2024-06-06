@@ -29,15 +29,12 @@ Program::Program(const string &_majorsFile_path,
 void Program::run() {
   setup();
   while (open) {
-    test();
     vector<string> input = getInputVectorFromTerminal();
     if (!input.empty()) {
       parseInput(input);
     }
   }
 }
-
-void Program::test() {} //? delete when code completed
 
 void Program::setup() {
   if (!createFileIfNotExists(INTERNAL_DATA_DIRECTORY_PATH +
@@ -97,6 +94,7 @@ void Program::setupConfigFile(CSVHandler &File) {
   File.addRowToMatrix(row);
   File.writeMatrixToCSV();
 }
+
 void Program::setupOfferCoursesFile(CSVHandler &File) {
   vector<string> row = {"offer_course_id", "course_id",   "professor_id",
                         "capacity",        "time",        "exam_date",
@@ -460,6 +458,7 @@ void Program::deletePost(const string id) {
   posts.writeMatrixToCSV();
   cout << OK_OUTPUT << endl;
 }
+
 void Program::printUserHeader(const string id) {
   if (id == ADMIN_ID) {
     cout << ADMIN_NAME << endl;
@@ -502,11 +501,12 @@ void Program::printUserHeader(const string id) {
   if (courses_name.empty()) {
     cout << user_row[1] << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
-         << user_row[3] << " " << endl;
+         << capitalize(user_row[3]) << " " << endl;
   } else {
     cout << user_row[1] << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
-         << user_row[3] << " " << connectString(courses_name, ',') << endl;
+         << capitalize(user_row[3]) << " " << connectString(courses_name, ',')
+         << endl;
   }
 }
 
@@ -548,7 +548,7 @@ void Program::professorCloseTaPost(const string post_id) {
           input_status = NONE_STRING;
           while (input_status != ACCEPT_TA_REQUEST_STRING &&
                  input_status != REJECT_TA_REQUEST_STRING) {
-            cout << row[0] << " " << row[1] << " " << row[2] << " : ";
+            cout << row[0] << " " << row[1] << " " << row[2] << ": ";
             getline(cin, input_status);
           }
           ta_form.updateFieldInMatrix("sid", row[0], "status", input_status);
@@ -634,6 +634,7 @@ void Program::seeChannelPage(const string id) {
     cout << NOT_FOUND_OUTPUT << endl;
   }
 }
+
 void Program::getPost(const string id, const string post_id) {
   if (isUserIdValid(id)) {
     CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + id +
@@ -646,9 +647,9 @@ void Program::getPost(const string id, const string post_id) {
              << endl;
       } else if (post[4] == POSTS_DATA_TA_FORM_TYPE) {
         const string offer_course_id = splitString(post[1], ';')[1];
-        cout << post_id << " " << post[1] << endl;
+        cout << post_id << " " << splitString(post[1], ';')[0] << endl;
         seeOfferCourses(offer_course_id);
-        cout << "\"" << post[2] << "\"" << endl;
+        cout << "\"" << splitString(post[2], ';')[0] << "\"" << endl;
       }
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
@@ -659,6 +660,7 @@ void Program::getPost(const string id, const string post_id) {
     return;
   }
 }
+
 void Program::getChannelPost(const string id, const string post_id) {
   if (isOfferCourseIdValid(id)) {
     CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
@@ -708,6 +710,7 @@ void Program::seeAllOfferCourses() {
          << professorsCSV.findField("pid", line[2], "name") << endl;
   }
 }
+
 void Program::seeOfferCourses(const string &id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
@@ -849,6 +852,7 @@ void Program::studentAddCourse(string id) {
                        "Get Course");
     }
     cout << OK_OUTPUT << endl;
+    return;
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
   }
@@ -1037,35 +1041,38 @@ void Program::checkStudentCommand(const vector<string> &input) {
   try {
     checkStudentSpecificCommand(input);
   } catch (const runtime_error &e) {
-    if (std::string(e.what()) == "command not handle in this function") {
+    if (string(e.what()) == "command not handle in this function") {
       checkUserCommand(input);
     } else {
-      std::cout << "Error: " << e.what() << std::endl;
+      cout << "Error: " << e.what() << endl;
     }
   }
 }
+
 void Program::checkProfessorCommand(const vector<string> &input) {
   try {
     checkProfessorSpecificCommand(input);
   } catch (const runtime_error &e) {
-    if (std::string(e.what()) == "command not handle in this function") {
+    if (string(e.what()) == "command not handle in this function") {
       checkUserCommand(input);
     } else {
-      std::cout << "Error: " << e.what() << std::endl;
+      cout << "Error: " << e.what() << endl;
     }
   }
 }
+
 void Program::checkAdminCommand(const vector<string> &input) {
   try {
     checkAdminSpecificCommand(input);
   } catch (const runtime_error &e) {
-    if (std::string(e.what()) == "command not handle in this function") {
+    if (string(e.what()) == "command not handle in this function") {
       checkUserCommand(input);
     } else {
-      std::cout << "Error: " << e.what() << std::endl;
+      cout << "Error: " << e.what() << endl;
     }
   }
 }
+
 void Program::checkStudentSpecificCommand(const vector<string> &input) {
   if (input[0] == POST_COMMAND) {
     if (input[1] == TA_REQUEST_SUB_COMMAND) {
@@ -1095,6 +1102,7 @@ void Program::checkStudentSpecificCommand(const vector<string> &input) {
     throw runtime_error("command not handle in this function");
   }
 }
+
 void Program::checkProfessorSpecificCommand(const vector<string> &input) {
   if (input[0] == POST_COMMAND) {
     if (input[1] == TA_FORM_SUB_COMMAND) {
@@ -1108,6 +1116,7 @@ void Program::checkProfessorSpecificCommand(const vector<string> &input) {
     throw runtime_error("command not handle in this function");
   }
 }
+
 void Program::checkAdminSpecificCommand(const vector<string> &input) {
   if (input[0] == POST_COMMAND) {
     if (input[1] == COURSE_OFFER_SUB_COMMAND) {
@@ -1182,18 +1191,21 @@ bool Program::isStudentIdValid(const string &id) {
   }
   return false;
 }
+
 bool Program::isProfessorIdValid(const string &id) {
   if (professorsCSV.isExists("pid", id)) {
     return true;
   }
   return false;
 }
+
 bool Program::isCourseIdValid(const string &id) {
   if (coursesCSV.isExists("cid", id)) {
     return true;
   }
   return false;
 }
+
 bool Program::isOfferCourseIdValid(const string &id) {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
@@ -1308,6 +1320,7 @@ void Program::postPostCommand(const vector<string> &input) {
   }
   post(title, message, attach);
 }
+
 void Program::postCoursePostCommand(const vector<string> &input) {
   string id = NONE_STRING;
   string title = NONE_STRING;
@@ -1631,4 +1644,21 @@ void Program::AdminPostOfferCourseCommand(const vector<string> &input) {
     return;
   }
   courseOffer(course_id, professor_id, capacity, time, exam_date, class_number);
+}
+
+string Program::capitalize(const string &input) {
+  if (input.empty()) {
+    return input; // Return the empty string as is
+  }
+
+  string result = input;
+
+  // Capitalize the first character
+  result[0] = toupper(result[0]);
+
+  // Convert the rest of the characters to lowercase
+  for (size_t i = 1; i < result.length(); ++i) {
+    result[i] = tolower(result[i]);
+  }
+  return result;
 }

@@ -13,7 +13,7 @@ protected:
 public:
   User(const string &id, const string &name);
   virtual ~User() {}
-  virtual void printInfo() ;
+  virtual void printInfo();
   string getId() const;
   string getName() const;
 };

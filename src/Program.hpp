@@ -15,9 +15,37 @@ public:
           const string &_coursesFile_path, const string &_professorsFile_path);
   void run();
   void setup();
-  void test();
 
 private:
+  vector<string> getInputVectorFromTerminal();
+  void parseInput(const vector<string> &input);
+  void checkLoginCommand(const vector<string> &input);
+
+  void checkUserCommand(const vector<string> &input);
+  void checkStudentCommand(const vector<string> &input);
+  void checkProfessorCommand(const vector<string> &input);
+  void checkAdminCommand(const vector<string> &input);
+  void checkStudentSpecificCommand(const vector<string> &input);
+  void checkProfessorSpecificCommand(const vector<string> &input);
+  void checkAdminSpecificCommand(const vector<string> &input);
+
+  void postPostCommand(const vector<string> &input);
+  void postCoursePostCommand(const vector<string> &input);
+  void postConnectCommand(const vector<string> &input);
+  void postProfilePhotoCommand(const vector<string> &input);
+  void deletePostCommand(const vector<string> &input);
+  void getPersonalPageCommand(const vector<string> &input);
+  void getCourseChannelCommand(const vector<string> &input);
+  void getCoursePostCommand(const vector<string> &input);
+  void getCoursesCommand(const vector<string> &input);
+  void getPostCommand(const vector<string> &input);
+  void studentPutMyCourseCommand(const vector<string> &input);
+  void studentDeleteCourseCommand(const vector<string> &input);
+  void studentPostTaRequestCommand(const vector<string> &input);
+  void professorPostTaFormCommand(const vector<string> &input);
+  void professorPostCloseTaFormCommand(const vector<string> &input);
+  void AdminPostOfferCourseCommand(const vector<string> &input);
+
   bool createFileIfNotExists(const string &filename);
   void setupConfigFile(CSVHandler &File);
   void setupOfferCoursesFile(CSVHandler &File);
@@ -26,11 +54,7 @@ private:
   void setupCoursePostsFile(CSVHandler &File);
   void setupNotificationsFile(CSVHandler &File);
   void setupTaFormFile(CSVHandler &File);
-  vector<string> getInputVectorFromTerminal();
-  void parseInput(const vector<string> &input);
-  void checkLoginCommand(const vector<string> &input);
-  bool isCommandInList(const string &command,
-                       const vector<string> &command_list);
+
   void login(const string id, const string password);
   void logout();
   void post(const string title, const string message, const string attach);
@@ -58,15 +82,9 @@ private:
   void studentAddTaRequest(string professor_id, string form_id);
   vector<size_t> studentCoursesIndex();
   void studentAllCourses();
-  void checkUserCommand(const vector<string> &input);
-  void checkStudentCommand(const vector<string> &input);
-  void checkProfessorCommand(const vector<string> &input);
-  void checkAdminCommand(const vector<string> &input);
-  void checkStudentSpecificCommand(const vector<string> &input);
-  void checkProfessorSpecificCommand(const vector<string> &input);
-  void checkAdminSpecificCommand(const vector<string> &input);
-  vector<string> splitString(const string &input, const char delimiter);
-  string connectString(const vector<string> &input, const char delimiter);
+
+  bool isCommandInList(const string &command,
+                       const vector<string> &command_list);
   bool isExists(const string member, const vector<string> vector);
   bool isNormalNumber(const string &str);
   bool isUserIdValid(const string &id);
@@ -81,22 +99,11 @@ private:
   bool isCourseOfferStudentTimeOverlap(const string &offer_course_id);
   bool isCourseOfferStudentMajorOk(const string &offer_course_id);
   bool isCourseOfferStudentCreditOk(const string &offer_course_id);
-  void postPostCommand(const vector<string> &input);
-  void postCoursePostCommand(const vector<string> &input);
-  void postConnectCommand(const vector<string> &input);
-  void postProfilePhotoCommand(const vector<string> &input);
-  void deletePostCommand(const vector<string> &input);
-  void getPersonalPageCommand(const vector<string> &input);
-  void getCourseChannelCommand(const vector<string> &input);
-  void getCoursePostCommand(const vector<string> &input);
-  void getCoursesCommand(const vector<string> &input);
-  void getPostCommand(const vector<string> &input);
-  void studentPutMyCourseCommand(const vector<string> &input);
-  void studentDeleteCourseCommand(const vector<string> &input);
-  void studentPostTaRequestCommand(const vector<string> &input);
-  void professorPostTaFormCommand(const vector<string> &input);
-  void professorPostCloseTaFormCommand(const vector<string> &input);
-  void AdminPostOfferCourseCommand(const vector<string> &input);
+
+  vector<string> splitString(const string &input, const char delimiter);
+  string connectString(const vector<string> &input, const char delimiter);
+  string capitalize(const string &input);
+
 
   string majorsFile_path;
   string studentsFile_path;
