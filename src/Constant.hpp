@@ -65,4 +65,18 @@ const string TA_FORM_SUB_COMMAND = "ta_form";
 const string TA_REQUEST_SUB_COMMAND = "ta_request";
 const string CLOSE_TA_FORM_SUB_COMMAND = "close_ta_form";
 
+const string TITLE_ARG_COMMAND = "title";
+const string MESSAGE_ARG_COMMAND = "message";
+const string IMAGE_ARG_COMMAND = "image";
+const string ID_ARG_COMMAND = "id";
+const string PHOTO_ARG_COMMAND = "photo";
+const string POST_ID_ARG_COMMAND = "post_id";
+const string PROFESSOR_ID_ARG_COMMAND = "professor_id";
+const string FORM_ID_ARG_COMMAND = "form_id";
+const string COURSE_ID_ARG_COMMAND = "course_id";
+const string CAPACITY_ARG_COMMAND = "capacity";
+const string TIME_ARG_COMMAND = "time";
+const string EXAM_DATE_ARG_COMMAND = "exam_date";
+const string CLASS_NUMBER_ARG_COMMAND = "class_number";
+
 #endif // CONSTANT_HPP

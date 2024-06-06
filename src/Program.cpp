@@ -1300,15 +1300,15 @@ void Program::postPostCommand(const vector<string> &input) {
   string message = NONE_STRING;
   string attach = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "title") {
+    if (input[i] == TITLE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         title = input[i + 1];
       }
-    } else if (input[i] == "message") {
+    } else if (input[i] == MESSAGE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         message = input[i + 1];
       }
-    } else if (input[i] == "image") {
+    } else if (input[i] == IMAGE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         attach = input[i + 1];
       }
@@ -1327,19 +1327,19 @@ void Program::postCoursePostCommand(const vector<string> &input) {
   string message = NONE_STRING;
   string attach = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
-    } else if (input[i] == "title") {
+    } else if (input[i] == TITLE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         title = input[i + 1];
       }
-    } else if (input[i] == "message") {
+    } else if (input[i] == MESSAGE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         message = input[i + 1];
       }
-    } else if (input[i] == "image") {
+    } else if (input[i] == IMAGE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         attach = input[i + 1];
       }
@@ -1356,7 +1356,7 @@ void Program::postCoursePostCommand(const vector<string> &input) {
 void Program::postConnectCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1372,7 +1372,7 @@ void Program::postConnectCommand(const vector<string> &input) {
 void Program::postProfilePhotoCommand(const vector<string> &input) {
   string photo = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "photo") {
+    if (input[i] == PHOTO_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         photo = input[i + 1];
       }
@@ -1388,7 +1388,7 @@ void Program::postProfilePhotoCommand(const vector<string> &input) {
 void Program::deletePostCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1404,7 +1404,7 @@ void Program::deletePostCommand(const vector<string> &input) {
 void Program::getPersonalPageCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1420,7 +1420,7 @@ void Program::getPersonalPageCommand(const vector<string> &input) {
 void Program::getCourseChannelCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1437,11 +1437,11 @@ void Program::getCoursePostCommand(const vector<string> &input) {
   string id = NONE_STRING;
   string post_id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
-    } else if (input[i] == "post_id") {
+    } else if (input[i] == POST_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         post_id = input[i + 1];
       }
@@ -1458,7 +1458,7 @@ void Program::getCoursePostCommand(const vector<string> &input) {
 void Program::getCoursesCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1478,11 +1478,11 @@ void Program::getPostCommand(const vector<string> &input) {
   string id = NONE_STRING;
   string post_id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
-    } else if (input[i] == "post_id") {
+    } else if (input[i] == POST_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         post_id = input[i + 1];
       }
@@ -1499,7 +1499,7 @@ void Program::getPostCommand(const vector<string> &input) {
 void Program::studentPutMyCourseCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1521,7 +1521,7 @@ void Program::studentPutMyCourseCommand(const vector<string> &input) {
 void Program::studentDeleteCourseCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1538,11 +1538,11 @@ void Program::studentPostTaRequestCommand(const vector<string> &input) {
   string professor_id = NONE_STRING;
   string form_id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "professor_id") {
+    if (input[i] == PROFESSOR_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         professor_id = input[i + 1];
       }
-    } else if (input[i] == "form_id") {
+    } else if (input[i] == FORM_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         form_id = input[i + 1];
       }
@@ -1560,11 +1560,11 @@ void Program::professorPostTaFormCommand(const vector<string> &input) {
   string offer_course_id = NONE_STRING;
   string message = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "course_id") {
+    if (input[i] == COURSE_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         offer_course_id = input[i + 1];
       }
-    } else if (input[i] == "message") {
+    } else if (input[i] == MESSAGE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         message = input[i + 1];
       }
@@ -1580,7 +1580,7 @@ void Program::professorPostTaFormCommand(const vector<string> &input) {
 void Program::professorPostCloseTaFormCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "id") {
+    if (input[i] == ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         id = input[i + 1];
       }
@@ -1601,27 +1601,27 @@ void Program::AdminPostOfferCourseCommand(const vector<string> &input) {
   string exam_date = NONE_STRING;
   string class_number = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
-    if (input[i] == "course_id") {
+    if (input[i] == COURSE_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         course_id = input[i + 1];
       }
-    } else if (input[i] == "professor_id") {
+    } else if (input[i] == PROFESSOR_ID_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         professor_id = input[i + 1];
       }
-    } else if (input[i] == "capacity") {
+    } else if (input[i] == CAPACITY_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         capacity = input[i + 1];
       }
-    } else if (input[i] == "time") {
+    } else if (input[i] == TIME_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         time = input[i + 1];
       }
-    } else if (input[i] == "exam_date") {
+    } else if (input[i] == EXAM_DATE_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         exam_date = input[i + 1];
       }
-    } else if (input[i] == "class_number") {
+    } else if (input[i] == CLASS_NUMBER_ARG_COMMAND) {
       if (i + 1 < input.size()) {
         class_number = input[i + 1];
       }
