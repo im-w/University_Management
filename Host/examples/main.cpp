@@ -8,6 +8,7 @@ void mapServerPaths(Server& server) {
     server.setNotFoundErrPage("static/404.html");
     server.get("/", new ShowPage("static/home.html"));
     server.get("/home.png", new ShowImage("static/home.png"));
+    server.get("/home-background.png", new ShowImage("static/home-background.png"));
     server.get("/rand", new RandomNumberHandler());
     server.get("/login", new ShowPage("static/logincss.html"));
     server.post("/login", new LoginHandler());

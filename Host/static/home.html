@@ -4,17 +4,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AP HTTP</title>
+  <title>University of Tehran Management Service</title>
+  <style>
+    body {
+      background: url('/home-background.png') no-repeat center center fixed; 
+      background-size: cover;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh; /* Ensure body takes up at least the height of the viewport */
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1; /* Allows main content to grow and push the footer down */
+    }
+    h1 {
+      font-size: 3em;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+    img {
+      width: 30%;
+      margin: 20px 0;
+    }
+    .login-button {
+      background-color: black;
+      color: white;
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: bold;
+      margin: 4px 2px;
+      transition: all 0.3s ease-in-out;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300%;
+      height: 300%;
+      background-color: white;
+      transition: all 0.3s ease-in-out;
+      border-radius: 50%;
+      z-index: -1;
+      transform: translate(-50%, -50%) scale(0);
+    }
+    .login-button:hover::after {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+    .login-button:hover {
+      color: black;
+      background-color: white;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+    }
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 200px;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: space-between;
+    }
+    footer .footer-section {
+      width: 30%; /* Divide footer into three columns */
+      padding: 0 10px;
+    }
+    footer h3 {
+      font-size: 1.2em;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    footer p {
+      font-size: 0.8em;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 
-<body style="text-align: center;">
-  <h1>AP HTTP</h1>
-  <img src="/home.png" alt="Home Logo" style="width:5%;"><br>
-  <a href="/rand">Go to rand page</a><br>
-  <a href="/login">Go to login page</a><br>
-  <a href="/up">Go to upload page</a><br>
-  <a href="/colors">Go to colors page</a><br>
-  <a href="/music">Go to music page</a>
+<body>
+  <main>
+    <h1>University of Tehran Management Service</h1>
+    <p>Welcome to University of Tehran</p>
+    <br>
+    <br>
+    <img src="/home.png" alt="Home Logo"><br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <a href="/login" class="login-button">Login</a>
+  </main>
+
+  <footer>
+    <div class="footer-section">
+      <h3>About Us</h3>
+      <p>The University of Tehran, established in 1934, is Iran's oldest and most prestigious university. Known as "The Mother University of Iran," it has played a crucial role in the development of higher education in the country. The Faculty of Management, part of this esteemed institution, offers a wide range of programs in areas such as business administration, finance, and human resources, designed to equip students with the skills needed to excel in various management roles. The university's commitment to academic excellence and research is reflected in its competitive admissions process, which selects only the top students from across the nation.</p>
+    </div>
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <p>For inquiries and further information, you can reach the Faculty of Management at the University of Tehran through various channels. The main campus is located on Enghelab Avenue in Tehran, a central location that is easily accessible. Prospective students and visitors can contact the administration office by phone at +98-21-6111 or via email at info@ut.ac.ir. Additionally, in-person consultations can be arranged by visiting the office located at No. 122, East Side, Southern Building, Faculty of Management, University of Tehran, Jalal-e Al-e Ahmad St., Tehran, Iran. The faculty's dedicated team is always ready to assist with any questions or concerns regarding admissions, programs, or other services.</p>
+    </div>
+    <div class="footer-section">
+      <h3>Privacy Policy</h3>
+      <p>The University of Tehran is committed to protecting the privacy and personal data of its students, faculty, and visitors. The university collects personal information only for specific, legitimate purposes, such as enrollment, academic advising, and improving educational services. All data is stored securely and is accessible only to authorized personnel. The university adheres to strict data protection regulations to ensure the confidentiality and integrity of personal information. If you have any concerns or questions about our privacy practices, please contact our data protection officer at privacy@ut.ac.ir. We value your trust and are dedicated to maintaining the highest standards of privacy and security.</p>
+    </div>
+  </footer>
 </body>
 
 </html>
