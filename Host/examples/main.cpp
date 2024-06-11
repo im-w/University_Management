@@ -12,6 +12,14 @@ void mapServerPaths(Server& server) {
     server.get("/rand", new RandomNumberHandler());
     server.get("/login", new ShowPage("static/logincss.html"));
     server.post("/login", new LoginHandler());
+
+    server.get("/student", new ShowPage("static/student.html"));
+    server.get("/student-background.png", new ShowImage("static/student-background.png"));
+    server.get("/professor", new ShowPage("static/professor.html"));
+    server.get("/professor-background.png", new ShowImage("static/professor-background.png"));
+    server.get("/admin", new ShowPage("static/admin.html"));
+    server.get("/admin-background.png", new ShowImage("static/admin-background.png"));
+    
     server.get("/up", new ShowPage("static/upload_form.html"));
     server.post("/up", new UploadHandler());
     server.get("/colors", new ColorHandler("template/colors.html"));
