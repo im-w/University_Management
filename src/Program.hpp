@@ -13,8 +13,8 @@ class Program {
 public:
   Program(const string &_majorsFile_path, const string &_studentsFile_path,
           const string &_coursesFile_path, const string &_professorsFile_path);
-  void run();
   void setup();
+  void run();
 
 private:
   vector<string> getInputVectorFromTerminal();

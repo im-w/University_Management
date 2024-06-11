@@ -12,7 +12,7 @@ const string ADMIN_ID = "0";
 const string ADMIN_PASSWORD = "UT_account";
 const string ADMIN_NAME = "UT_account";
 
-const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = true;
+const bool REWRITE_INTERNAL_DATA_WHEN_PROGRAM_RUN = false;
 const string INTERNAL_DATA_DIRECTORY_PATH = "./Internal_Databases/";
 const string INTERNAL_DATA_POSTS_BASE_NAME = "-posts.csv";
 const string INTERNAL_DATA_NOTIFICATIONS_BASE_NAME = "-notifications.csv";
@@ -78,5 +78,10 @@ const string CAPACITY_ARG_COMMAND = "capacity";
 const string TIME_ARG_COMMAND = "time";
 const string EXAM_DATE_ARG_COMMAND = "exam_date";
 const string CLASS_NUMBER_ARG_COMMAND = "class_number";
+
+const string MAJORS_PATH = "./External_Databases/majors.csv";
+const string STUDENTS_PATH = "./External_Databases/students.csv";
+const string COURSES_PATH = "./External_Databases/courses.csv";
+const string TEACHERS_PATH = "./External_Databases/teachers.csv";
 
 #endif // CONSTANT_HPP
