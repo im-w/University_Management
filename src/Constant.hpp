@@ -65,10 +65,13 @@ const string TA_FORM_SUB_COMMAND = "ta_form";
 const string TA_REQUEST_SUB_COMMAND = "ta_request";
 const string CLOSE_TA_FORM_SUB_COMMAND = "close_ta_form";
 
+const string SEPARATOR_CHARACTER = "?";
+
 const string TITLE_ARG_COMMAND = "title";
 const string MESSAGE_ARG_COMMAND = "message";
 const string IMAGE_ARG_COMMAND = "image";
 const string ID_ARG_COMMAND = "id";
+const string PASSWORD_ARG_COMMAND = "password";
 const string PHOTO_ARG_COMMAND = "photo";
 const string POST_ID_ARG_COMMAND = "post_id";
 const string PROFESSOR_ID_ARG_COMMAND = "professor_id";

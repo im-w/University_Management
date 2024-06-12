@@ -16,10 +16,9 @@ public:
   void setup();
   void run();
 
-private:
+  bool checkLoginCommand(const vector<string> &input);
   vector<string> getInputVectorFromTerminal();
   void parseInput(const vector<string> &input);
-  void checkLoginCommand(const vector<string> &input);
 
   void checkUserCommand(const vector<string> &input);
   void checkStudentCommand(const vector<string> &input);
@@ -55,7 +54,7 @@ private:
   void setupNotificationsFile(CSVHandler &File);
   void setupTaFormFile(CSVHandler &File);
 
-  void login(const string id, const string password);
+  bool login(const string id, const string password);
   void logout();
   void post(const string title, const string message, const string attach);
   void professorPostTaForm(const string offer_course_id, const string message);
@@ -100,10 +99,10 @@ private:
   bool isCourseOfferStudentMajorOk(const string &offer_course_id);
   bool isCourseOfferStudentCreditOk(const string &offer_course_id);
 
+private:
   vector<string> splitString(const string &input, const char delimiter);
   string connectString(const vector<string> &input, const char delimiter);
   string capitalize(const string &input);
-
 
   string majorsFile_path;
   string studentsFile_path;

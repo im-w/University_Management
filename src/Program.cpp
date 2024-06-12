@@ -1,7 +1,7 @@
-#include "Program.hpp"
 #include "Admin.hpp"
 #include "Constant.hpp"
 #include "Professor.hpp"
+#include "Program.hpp"
 #include "Student.hpp"
 #include "TimeRange.hpp"
 #include <algorithm>
@@ -195,18 +195,18 @@ void Program::parseInput(const vector<string> &input) {
   }
 }
 
-void Program::checkLoginCommand(const vector<string> &input) {
+bool Program::checkLoginCommand(const vector<string> &input) {
   if (input[0] == POST_COMMAND) {
     if (isCommandInList(input[1], POST_COMMAND_LIST)) {
       if (input[1] == LOGIN_SUB_COMMAND) {
         string id = NONE_STRING;
         string password = NONE_STRING;
         for (size_t i = 3; i < input.size(); i++) {
-          if (input[i] == "id") {
+          if (input[i] == ID_ARG_COMMAND) {
             if (i + 1 < input.size()) {
               id = input[i + 1];
             }
-          } else if (input[i] == "password") {
+          } else if (input[i] == PASSWORD_ARG_COMMAND) {
             if (i + 1 < input.size()) {
               password = input[i + 1];
             }
@@ -216,35 +216,44 @@ void Program::checkLoginCommand(const vector<string> &input) {
             (!isNormalNumber(id))) {
 
           cout << BAD_REQUEST_OUTPUT << endl;
-          return;
+          return false;
         }
-        login(id, password);
+        return login(id, password);
       } else {
         cout << PERMISSION_DENIED_OUTPUT << endl;
+        return false;
       }
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
+      return false;
     }
   } else if (input[0] == PUT_COMMAND) {
     if (isCommandInList(input[1], PUT_COMMAND_LIST)) {
       cout << PERMISSION_DENIED_OUTPUT << endl;
+      return false;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
+      return false;
     }
   } else if (input[0] == GET_COMMAND) {
     if (isCommandInList(input[1], GET_COMMAND_LIST)) {
       cout << PERMISSION_DENIED_OUTPUT << endl;
+      return false;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
+      return false;
     }
   } else if (input[0] == DELETE_COMMAND) {
     if (isCommandInList(input[1], DELETE_COMMAND_LIST)) {
       cout << PERMISSION_DENIED_OUTPUT << endl;
+      return false;
     } else {
       cout << NOT_FOUND_OUTPUT << endl;
+      return false;
     }
   } else {
     cout << BAD_REQUEST_OUTPUT << endl;
+    return false;
   }
 }
 
@@ -258,7 +267,7 @@ bool Program::isCommandInList(const string &command,
   return false;
 }
 
-void Program::login(const string id, const string password) {
+bool Program::login(const string id, const string password) {
   if (studentsCSV.isExists("sid", id)) {
     if (studentsCSV.findField("sid", id, "password") == password) {
       user_ptr = new Student(id, studentsCSV.findField("sid", id, "name"),
@@ -266,8 +275,10 @@ void Program::login(const string id, const string password) {
                              studentsCSV.findField("sid", id, "semester"));
       permission = Permission::Student;
       cout << OK_OUTPUT << endl;
+      return true;
     } else {
       cout << PERMISSION_DENIED_OUTPUT << endl;
+      return false;
     }
   } else if (professorsCSV.isExists("pid", id)) {
     if (professorsCSV.findField("pid", id, "password") == password) {
@@ -276,19 +287,24 @@ void Program::login(const string id, const string password) {
                                professorsCSV.findField("pid", id, "position"));
       permission = Permission::Professor;
       cout << OK_OUTPUT << endl;
+      return true;
     } else {
       cout << PERMISSION_DENIED_OUTPUT << endl;
+      return false;
     }
   } else if (id == ADMIN_ID) {
     if (password == ADMIN_PASSWORD) {
       user_ptr = new Admin(id, ADMIN_NAME);
       permission = Permission::Admin;
       cout << OK_OUTPUT << endl;
+      return true;
     } else {
       cout << PERMISSION_DENIED_OUTPUT << endl;
+      return false;
     }
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
+    return false;
   }
 }
 

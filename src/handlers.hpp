@@ -1,6 +1,7 @@
 #ifndef HANDLERS_HPP_INCLUDE
 #define HANDLERS_HPP_INCLUDE
 
+#include "Program.hpp"
 #include <map>
 #include <string>
 
@@ -8,23 +9,27 @@
 
 class RandomNumberHandler : public RequestHandler {
 public:
-    Response* callback(Request*) override;
+  Response *callback(Request *) override;
 };
 
 class LoginHandler : public RequestHandler {
 public:
-    Response* callback(Request*) override;
+  LoginHandler(Program &program) : program_(program) {}
+  Response *callback(Request *) override;
+
+private:
+  Program program_;
 };
 
 class UploadHandler : public RequestHandler {
 public:
-    Response* callback(Request*) override;
+  Response *callback(Request *) override;
 };
 
 class ColorHandler : public TemplateHandler {
 public:
-    ColorHandler(const std::string& filePath);
-    std::map<std::string, std::string> handle(Request* req) override;
+  ColorHandler(const std::string &filePath);
+  std::map<std::string, std::string> handle(Request *req) override;
 };
 
 #endif // HANDLERS_HPP_INCLUDE
