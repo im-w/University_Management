@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+    <title>Professor Page</title>
     <style>
         body {
             margin: 0;
@@ -51,13 +51,13 @@
         }
 
         nav a:hover {
-            color: #BA55D3; /* Slightly lighter light purple for hover */
+            color: #FFE4B5; /* Slightly lighter super light yellow-brown for hover */
         }
 
         .right-panel {
             width: 70%;
             position: relative;
-            background: url('admin-background.png') no-repeat center center;
+            background: url('professor-background.png') no-repeat center center;
             background-size: cover;
             display: flex;
             flex-direction: column;
@@ -84,30 +84,53 @@
             padding: 10px;
             margin-top: 20px;
             border-radius: 20px;
-            border: 2px solid #9370DB; /* Light purple */
+            border: 2px solid #FFDAB9; /* Super light yellow-brown */
             outline: none;
             font-size: 1em;
             font-weight: bold;
-            color: #9370DB; /* Light purple */
+            color: #FFDAB9; /* Super light yellow-brown */
             background-color: #1e1e1e;
             text-align: center;
         }
 
         .curved-input::placeholder {
-            color: #9370DB; /* Light purple */
+            color: #FFDAB9; /* Super light yellow-brown */
         }
+        form button {
+    background-color: #FFDAB9; /* PeachPuff */
+    color: #333; /* Dark text color for better readability */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+form button:hover {
+    background-color: #FFB6C1; /* LightPink */
+    transform: scale(1.05);
+}
+
+form button:active {
+    background-color: #FFDAB9; /* PeachPuff */
+    transform: scale(1);
+}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left-panel">
-            <img src="./default-profile-picture" alt="Profile Picture" class="profile-picture">
+            <img src="./default-profile-picture.png" alt="Profile Picture" class="profile-picture">
             <nav>
-                <a href="/admin-change-profile-picture">Change Profile Picture</a>
-                <a href="/admin-send-post">Send Post</a>
-                <a href="admin-show-offer-course">Show Offer Courses</a>
-                <a href="/admin-add-course">Add Course</a>
-                <a href="/logout">Logout</a>
+                <a href="/professor-change-profile-picture">Change Profile Picture</a>
+                <a href="/professor-send-post">Send Post</a>
+                <a href="/professor-see-personal-page">See Personal Page</a>
+                <a href="/professor-show-offer-course">Show Offer Courses</a>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit">Logout</button>
+                </form>
             </nav>
         </div>
         <div class="right-panel">

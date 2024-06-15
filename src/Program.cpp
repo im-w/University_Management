@@ -716,15 +716,24 @@ void Program::getChannelPost(const string id, const string post_id) {
   }
 }
 
-void Program::seeAllOfferCourses() {
+string Program::seeAllOfferCourses() {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   vector<vector<string>> body_offer_courses = offer_courses.bodyMatrix();
-  for (const vector<string> &line : body_offer_courses) {
-    cout << line[0] << " " << coursesCSV.findField("cid", line[1], "name")
-         << " " << line[3] << " "
-         << professorsCSV.findField("pid", line[2], "name") << endl;
-  }
+    std::stringstream ss;
+    for (const std::vector<std::string> &line : body_offer_courses) {
+        ss << line[0] << " "
+           << coursesCSV.findField("cid", line[1], "name") << " "
+           << line[3] << " "
+           << professorsCSV.findField("pid", line[2], "name") << "<br>";
+
+        cout << line[0] << " "
+           << coursesCSV.findField("cid", line[1], "name") << " "
+           << line[3] << " "
+           << professorsCSV.findField("pid", line[2], "name") << endl;
+    }
+
+    return ss.str();
 }
 
 void Program::seeOfferCourses(const string &id) {
@@ -969,28 +978,38 @@ vector<size_t> Program::studentCoursesIndex() {
   return userCoursesIndex;
 }
 
-void Program::studentAllCourses() {
+string Program::studentAllCourses() {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   if (offer_courses.isEmpty()) {
     cout << EMPTY_OUTPUT << endl;
-    return;
+    return EMPTY_OUTPUT;
   }
   vector<vector<string>> body_offer_courses = offer_courses.bodyMatrix();
   vector<size_t> userCoursesIndex = studentCoursesIndex();
   if (userCoursesIndex.empty()) {
     cout << EMPTY_OUTPUT << endl;
-    return;
+    return EMPTY_OUTPUT;
   }
-  for (const size_t &index : userCoursesIndex) {
-    cout << body_offer_courses[index][0] << " "
-         << coursesCSV.findField("cid", body_offer_courses[index][1], "name")
-         << " " << body_offer_courses[index][3] << " "
-         << professorsCSV.findField("pid", body_offer_courses[index][2], "name")
-         << " " << body_offer_courses[index][4] << " "
-         << body_offer_courses[index][5] << " " << body_offer_courses[index][6]
-         << endl;
-  }
+    stringstream ss;
+    for (const size_t &index : userCoursesIndex) {
+        ss << body_offer_courses[index][0] << " "
+           << coursesCSV.findField("cid", body_offer_courses[index][1], "name") << " "
+           << body_offer_courses[index][3] << " "
+           << professorsCSV.findField("pid", body_offer_courses[index][2], "name") << " "
+           << body_offer_courses[index][4] << " "
+           << body_offer_courses[index][5] << " "
+           << body_offer_courses[index][6] << "<br>";
+           
+        cout << body_offer_courses[index][0] << " "
+           << coursesCSV.findField("cid", body_offer_courses[index][1], "name") << " "
+           << body_offer_courses[index][3] << " "
+           << professorsCSV.findField("pid", body_offer_courses[index][2], "name") << " "
+           << body_offer_courses[index][4] << " "
+           << body_offer_courses[index][5] << " "
+           << body_offer_courses[index][6] << endl;
+    }
+    return ss.str();
 }
 
 void Program::checkUserCommand(const vector<string> &input) {

@@ -96,17 +96,41 @@
         .curved-input::placeholder {
             color: #FFDAB9; /* Super light yellow-brown */
         }
+        form button {
+    background-color: #FFDAB9; /* PeachPuff */
+    color: #333; /* Dark text color for better readability */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+form button:hover {
+    background-color: #FFB6C1; /* LightPink */
+    transform: scale(1.05);
+}
+
+form button:active {
+    background-color: #FFDAB9; /* PeachPuff */
+    transform: scale(1);
+}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left-panel">
-            <img src="./default-profile-picture" alt="Profile Picture" class="profile-picture">
+            <img src="./default-profile-picture.png" alt="Profile Picture" class="profile-picture">
             <nav>
                 <a href="/professor-change-profile-picture">Change Profile Picture</a>
                 <a href="/professor-send-post">Send Post</a>
+                <a href="/professor-see-personal-page">See Personal Page</a>
                 <a href="/professor-show-offer-course">Show Offer Courses</a>
-                <a href="/logout">Logout</a>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit">Logout</button>
+                </form>
             </nav>
         </div>
         <div class="right-panel">

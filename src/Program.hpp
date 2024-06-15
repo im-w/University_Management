@@ -67,7 +67,7 @@ public:
   void seeChannelPage(const string id);
   void getPost(const string id, const string post_id);
   void getChannelPost(const string id, const string post_id);
-  void seeAllOfferCourses();
+  string seeAllOfferCourses();
   void seeOfferCourses(const string &id);
   void connect(const string id);
   void addProfilePhoto(const string photo);
@@ -80,7 +80,7 @@ public:
   void studentDeleteCourse(string id);
   void studentAddTaRequest(string professor_id, string form_id);
   vector<size_t> studentCoursesIndex();
-  void studentAllCourses();
+  string studentAllCourses();
 
   bool isCommandInList(const string &command,
                        const vector<string> &command_list);

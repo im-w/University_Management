@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professor Page</title>
+    <title>Student Page</title>
     <style>
         body {
             margin: 0;
@@ -51,13 +51,13 @@
         }
 
         nav a:hover {
-            color: #FFE4B5; /* Slightly lighter super light yellow-brown for hover */
+            color: #F0F8FF; /* Lighter white for hover */
         }
 
         .right-panel {
             width: 70%;
             position: relative;
-            background: url('professor-background.png') no-repeat center center;
+            background: url('student-background.png') no-repeat center center;
             background-size: cover;
             display: flex;
             flex-direction: column;
@@ -84,29 +84,58 @@
             padding: 10px;
             margin-top: 20px;
             border-radius: 20px;
-            border: 2px solid #FFDAB9; /* Super light yellow-brown */
+            border: 2px solid #B0E0E6; /* Soft super light green */
             outline: none;
             font-size: 1em;
             font-weight: bold;
-            color: #FFDAB9; /* Super light yellow-brown */
+            color: #B0E0E6; /* Soft super light green */
             background-color: #1e1e1e;
             text-align: center;
         }
 
         .curved-input::placeholder {
-            color: #FFDAB9; /* Super light yellow-brown */
+            color: #B0E0E6; /* Soft super light green */
+        }
+
+        /* High quality CSS for the logout button */
+        form button {
+            background-color: #B0E0E6; /* Soft super light green */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        form button:hover {
+            background-color: #87CEEB; /* LightSkyBlue */
+            transform: scale(1.05);
+        }
+
+        form button:active {
+            background-color: #B0E0E6; /* Soft super light green */
+            transform: scale(1);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left-panel">
-            <img src="./default-profile-picture" alt="Profile Picture" class="profile-picture">
+            <img src="./default-profile-picture.png" alt="Profile Picture" class="profile-picture">
             <nav>
-                <a href="/professor-change-profile-picture">Change Profile Picture</a>
-                <a href="/professor-send-post">Send Post</a>
-                <a href="/professor-show-offer-course">Show Offer Courses</a>
-                <a href="/logout">Logout</a>
+                <a href="/student-change-profile-picture">Change Profile Picture</a>
+                <a href="/student-send-post">Send Post</a>
+                <a href="/student-see-personal-page">See Personal Page</a>
+                <a href="/student-show-offer-course">Show Offer Courses</a>
+                <a href="/student-see-my-courses">See My Courses</a>
+                <a href="/student-join-offer-course">Join Offer Course</a>
+                <a href="/student-leave-offer-course">Leave Offer Course</a>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit">Logout</button>
+                </form>
             </nav>
         </div>
         <div class="right-panel">

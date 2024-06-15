@@ -17,23 +17,29 @@ void mapServerPaths(Server &server, Program &program) {
 
   server.get("/login", new ShowPage("static/login.html"));
   server.post("/login", new LoginHandler(program));
+  server.post("/logout", new LogoutHandler(program));
 
   server.get("/student", new ShowPage("static/student.html"));
+  server.get("/default-profile-picture.png", new ShowImage("static/default-profile-picture.png"));
   server.get("/student-background.png",
              new ShowImage("static/student-background.png"));
   server.get("/student-change-profile-picture",
              new ShowPage("static/student-change-profile-picture.html"));
   server.get("/student-send-post",
              new ShowPage("static/student-send-post.html"));
+  server.get("/student-see-personal-page", new ShowPage("static/student-see-personal-page.html"));
   server.get("/student-show-offer-course",
-             new ShowPage("static/student-show-offer-course.html"));
+             new StudentShowOfferCourseHandler(program));
   server.get("/student-join-offer-course",
              new ShowPage("static/student-join-offer-course.html"));
+  server.post("/student-join-offer-course",
+             new PostStudentJoinOfferCourseHandler(program));
   server.get("/student-leave-offer-course",
              new ShowPage("static/student-leave-offer-course.html"));
+  server.post("/student-leave-offer-course",
+             new PostStudentLeaveOfferCourseHandler(program));
   server.get("/student-see-my-courses",
-             new ShowPage("static/student-see-my-courses.html"));
-  server.get("/logout", new ShowPage("static/student-show-offer-course.html"));
+             new StudentShowMyOfferCourseHandler(program));
 
   server.get("/professor", new ShowPage("static/professor.html"));
   server.get("/professor-background.png",
@@ -42,9 +48,9 @@ void mapServerPaths(Server &server, Program &program) {
              new ShowPage("static/professor-change-profile-picture.html"));
   server.get("/professor-send-post",
              new ShowPage("static/professor-send-post.html"));
+    server.get("/professor-see-personal-page", new ShowPage("static/professor-see-personal-page.html"));
   server.get("/professor-show-offer-course",
-             new ShowPage("static/professor-show-offer-course.html"));
-  server.get("/logout", new ShowPage("static/student-show-offer-course.html"));
+             new ProfessorShowOfferCourseHandler(program));
 
   server.get("/admin", new ShowPage("static/admin.html"));
   server.get("/admin-background.png",
@@ -52,10 +58,12 @@ void mapServerPaths(Server &server, Program &program) {
   server.get("/admin-change-profile-picture",
              new ShowPage("static/admin-change-profile-picture.html"));
   server.get("/admin-send-post", new ShowPage("static/admin-send-post.html"));
+  server.get("/admin-see-personal-page", new ShowPage("static/admin-see-personal-page.html"));
   server.get("/admin-show-offer-course",
-             new ShowPage("static/admin-show-offer-course.html"));
-  server.get("/admin-add-course", new ShowPage("static/admin-add-course.html"));
-  server.get("/logout", new ShowPage("static/student-show-offer-course.html"));
+             new AdminShowOfferCourseHandler(program));
+  server.get("/admin-add-offer-course", new ShowPage("static/admin-add-offer-course.html"));
+  server.post("/admin-add-offer-course", new PostAdminAddOfferCourseHandler(program));
+
 
   server.get("/up", new ShowPage("static/upload_form.html"));
   server.post("/up", new UploadHandler());
