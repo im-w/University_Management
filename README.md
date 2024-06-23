@@ -13,15 +13,31 @@ Key Features:
 
 ## Screenshots
 
-![ScreenRecord](https://github.com/im-w/University_Management/Docs/ScreenRecord.mp4)
+![ScreenRecord](https://github.com/im-w/University_Management/blob/main/Docs/ScreenRecord.gif?raw=true)
+
+![ScreenShot 1](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot1.png?raw=true)
+
+![ScreenShot 2](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot2.png?raw=true)
+
+![ScreenShot 3](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot3.png?raw=true)
+
+![ScreenShot 4](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot4.png?raw=true)
+
+![ScreenShot 5](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot5.png?raw=true)
+
+![ScreenShot 6](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot6.png?raw=true)
+
+![ScreenShot 7](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot7.png?raw=true)
+
+![ScreenShot 8](https://github.com/im-w/University_Management/blob/main/Docs/Screenshot8.png?raw=true)
 
 # Documentation
 
-[Part 1 Description](https://github.com/im-w/University_Management/Docs/APS03-A6.1-Description.pdf)
+[Part 1 Description](https://github.com/im-w/University_Management/blob/main/Docs/APS03-A6.1-Description.pdf)
 
-[Part 2 Description](https://github.com/im-w/University_Management/Docs/APS03-A6.2-Description.pdf)
+[Part 2 Description](https://github.com/im-w/University_Management/blob/main/Docs/APS03-A6.2-Description.pdf)
 
-[Part 3 Description](https://github.com/im-w/University_Management/Docs/APS03-A6.3-Description.pdf)
+[Part 3 Description](https://github.com/im-w/University_Management/blob/main/Docs/APS03-A6.3-Description.pdf)
 
 # License
 
