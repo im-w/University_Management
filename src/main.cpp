@@ -15,8 +15,6 @@ void mapServerPaths(Server &server, Program &program) {
   server.get("/home-background.png",
              new ShowImage("static/home-background.png"));
 
-  server.get("/rand", new RandomNumberHandler());
-
   server.get("/login", new ShowPage("static/login.html"));
   server.post("/login", new LoginHandler(program));
   server.post("/logout", new LogoutHandler(program));
