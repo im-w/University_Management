@@ -2,6 +2,7 @@
 #include <string>
 
 #include "../server/server.hpp"
+#include "functions.hpp"
 #include "Program.hpp"
 #include "handlers.hpp"
 
@@ -19,58 +20,71 @@ void mapServerPaths(Server &server, Program &program) {
   server.post("/login", new LoginHandler(program));
   server.post("/logout", new LogoutHandler(program));
 
-  server.get("/student", new ShowPage("static/student.html"));
+  server.get("/student", new StudentHomeHandler(program));
   server.get("/default-profile-picture.png", new ShowImage("static/default-profile-picture.png"));
   server.get("/student-background.png",
              new ShowImage("static/student-background.png"));
   server.get("/student-change-profile-picture",
-             new ShowPage("static/student-change-profile-picture.html"));
+             new StudentChangeProfilePictureHandler(program));
+  server.post("/student-change-profile-picture",
+             new PostStudentChangeProfilePictureHandler(program, server));
+  server.post("/student-delete-profile-picture",
+             new PostStudentDeleteProfilePictureHandler(program));
   server.get("/student-send-post",
-             new ShowPage("static/student-send-post.html"));
-  server.get("/student-see-personal-page", new ShowPage("static/student-see-personal-page.html"));
+             new StudentSendPostHandler(program));
+  server.post("/student-send-post",
+             new PostStudentSendPostHandler(program, server));
+  server.get("/student-see-personal-page", new StudentSeePersonalPageHandler(program));
+  server.post("/student-see-personal-page", new PostStudentSeePersonalPageHandler(program));
   server.get("/student-show-offer-course",
              new StudentShowOfferCourseHandler(program));
   server.get("/student-join-offer-course",
-             new ShowPage("static/student-join-offer-course.html"));
+             new StudentJoinOfferCourseHandler(program));
   server.post("/student-join-offer-course",
              new PostStudentJoinOfferCourseHandler(program));
   server.get("/student-leave-offer-course",
-             new ShowPage("static/student-leave-offer-course.html"));
+             new StudentLeaveOfferCourseHandler(program));
   server.post("/student-leave-offer-course",
              new PostStudentLeaveOfferCourseHandler(program));
   server.get("/student-see-my-courses",
              new StudentShowMyOfferCourseHandler(program));
 
-  server.get("/professor", new ShowPage("static/professor.html"));
+  server.get("/professor", new ProfessorHomeHandler(program));
+  server.get("/default-profile-picture.png", new ShowImage("static/default-profile-picture.png"));
   server.get("/professor-background.png",
              new ShowImage("static/professor-background.png"));
   server.get("/professor-change-profile-picture",
-             new ShowPage("static/professor-change-profile-picture.html"));
+             new ProfessorChangeProfilePictureHandler(program));
+  server.post("/professor-change-profile-picture",
+             new PostProfessorChangeProfilePictureHandler(program, server));
+  server.post("/professor-delete-profile-picture",
+             new PostProfessorDeleteProfilePictureHandler(program));
   server.get("/professor-send-post",
-             new ShowPage("static/professor-send-post.html"));
-    server.get("/professor-see-personal-page", new ShowPage("static/professor-see-personal-page.html"));
+             new ProfessorSendPostHandler(program));
+  server.post("/professor-send-post",
+             new PostProfessorSendPostHandler(program, server));
+  server.get("/professor-see-personal-page", new ProfessorSeePersonalPageHandler(program));
+  server.post("/professor-see-personal-page", new PostProfessorSeePersonalPageHandler(program));
   server.get("/professor-show-offer-course",
              new ProfessorShowOfferCourseHandler(program));
 
-  server.get("/admin", new ShowPage("static/admin.html"));
+  server.get("/admin", new AdminHomeHandler(program));
   server.get("/admin-background.png",
              new ShowImage("static/admin-background.png"));
   server.get("/admin-change-profile-picture",
-             new ShowPage("static/admin-change-profile-picture.html"));
-  server.get("/admin-send-post", new ShowPage("static/admin-send-post.html"));
-  server.get("/admin-see-personal-page", new ShowPage("static/admin-see-personal-page.html"));
+             new AdminChangeProfilePictureHandler(program));
+  server.post("/admin-change-profile-picture",
+             new PostAdminChangeProfilePictureHandler(program, server));
+  server.post("/admin-delete-profile-picture",
+             new PostAdminDeleteProfilePictureHandler(program));
+  server.get("/admin-send-post", new AdminSendPostHandler(program));
+  server.post("/admin-send-post", new PostAdminSendPostHandler(program,server));
+  server.get("/admin-see-personal-page", new AdminSeePersonalPageHandler(program));
+  server.post("/admin-see-personal-page", new PostAdminSeePersonalPageHandler(program));
   server.get("/admin-show-offer-course",
              new AdminShowOfferCourseHandler(program));
-  server.get("/admin-add-offer-course", new ShowPage("static/admin-add-offer-course.html"));
+  server.get("/admin-add-offer-course", new AdminAddOfferCourseHandler(program));
   server.post("/admin-add-offer-course", new PostAdminAddOfferCourseHandler(program));
-
-
-  server.get("/up", new ShowPage("static/upload_form.html"));
-  server.post("/up", new UploadHandler());
-  server.get("/colors", new ColorHandler("template/colors.html"));
-  server.get("/music", new ShowPage("static/music.html"));
-  server.get("/music/moonlight.mp3",
-             new ShowFile("static/moonlight.mp3", "audio/mpeg"));
 }
 
 int main(int argc, char **argv) {
@@ -78,15 +92,16 @@ int main(int argc, char **argv) {
   program.setup();
 
   try {
-    int port = argc > 1 ? std::stoi(argv[1]) : 5000;
+    int port = argc > 1 ? stoi(argv[1]) : 5000;
     Server server(port);
     mapServerPaths(server, program);
-    std::cout << "Server running on port: " << port << std::endl;
+    autoMapImageServerPaths(server);
+    cout << "Server running on port: " << port << endl;
     server.run();
-  } catch (const std::invalid_argument &e) {
-    std::cerr << e.what() << std::endl;
+  } catch (const invalid_argument &e) {
+    cerr << e.what() << endl;
   } catch (const Server::Exception &e) {
-    std::cerr << e.getMessage() << std::endl;
+    cerr << e.getMessage() << endl;
   }
   return 0;
 }

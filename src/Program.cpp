@@ -475,10 +475,13 @@ void Program::deletePost(const string id) {
   cout << OK_OUTPUT << endl;
 }
 
-void Program::printUserHeader(const string id) {
+string Program::printUserHeader(const string id) {
+  std::string result;
+
   if (id == ADMIN_ID) {
     cout << ADMIN_NAME << endl;
-    return;
+    result = ADMIN_NAME + "\n";
+    return result;
   }
   vector<string> user_row = {};
   vector<string> courses_name = {};
@@ -518,31 +521,50 @@ void Program::printUserHeader(const string id) {
     cout << user_row[1] << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
          << capitalize(user_row[3]) << " " << endl;
+        result = user_row[1] + " | " +
+             majorsCSV.findField("mid", user_row[2], "major") + " | " +
+             capitalize(user_row[3]) + " \n";
   } else {
-    cout << user_row[1] << " "
+    cout << capitalize(user_row[1]) << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
          << capitalize(user_row[3]) << " " << connectString(courses_name, ',')
          << endl;
+    result = capitalize(user_row[1]) + " | " +
+             majorsCSV.findField("mid", user_row[2], "major") + " | " +
+             capitalize(user_row[3]) + " | " +
+             connectString(courses_name, ',') + "\n";
   }
+  return result;
 }
 
-void Program::seePage(const string id) {
+string Program::seePage(const string id) {
+  string result = "<p>";
   if (isUserIdValid(id)) {
-    printUserHeader(id);
+    result += printUserHeader(id) + "</p>\n<div class=\"post-container\">\n";
     CSVHandler posts(INTERNAL_DATA_DIRECTORY_PATH + id +
                      INTERNAL_DATA_POSTS_BASE_NAME);
     vector<vector<string>> all_posts_matrix = posts.bodyMatrix();
     reverse(all_posts_matrix.begin(), all_posts_matrix.end());
     for (const vector<string> &post : all_posts_matrix) {
       if (post[4] == POSTS_DATA_POST_TYPE) {
+        result += "<div class=\"post\">\n";
+        if (post[3] != NONE_STRING) {
+          size_t pos = post[3].find_last_of("/\\");
+          string link = post[3].substr(pos);
+          result += "<img src=\""+ link +"\" alt=\"Post Image\">\n";
+        }
         cout << post[0] << " \"" << post[1] << "\"" << endl;
+        result += "<p>" + post[0] + " \"" + post[1] + "\"" + "<br>" + post[2] + "</p></div>\n";
       } else if (post[4] == POSTS_DATA_TA_FORM_TYPE) {
         cout << post[0] << " " << splitString(post[1], ';')[0] << endl;
       }
     }
+    result += "</div>\n";
   } else {
     cout << NOT_FOUND_OUTPUT << endl;
+    result += NOT_FOUND_OUTPUT;
   }
+  return result;
 }
 
 void Program::professorCloseTaPost(const string post_id) {
@@ -1420,6 +1442,7 @@ void Program::postProfilePhotoCommand(const vector<string> &input) {
   addProfilePhoto(photo);
 }
 
+
 void Program::deletePostCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
@@ -1697,3 +1720,75 @@ string Program::capitalize(const string &input) {
   }
   return result;
 }
+
+string Program::getUserId() {
+  return user_ptr->getId();
+}
+
+string Program::getUserHeader() {
+    return printUserHeader(user_ptr->getId());
+}
+
+
+string Program::getUserMajor() {
+  string uid = user_ptr->getId();
+  if(isUserIdValid(uid)) {
+  string major_id = studentsCSV.findField("sid", uid, "major_id");
+  return majorsCSV.findField("mid",major_id,"major");
+  } else {
+    return "";
+  }
+}
+
+string Program::getProfilePicture() {
+  string uid = user_ptr->getId();
+if(isUserIdValid(uid)) {
+  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+  string profilePicture = config.findField("uid",uid,"profile_photo_path");
+  if (profilePicture != NONE_STRING) {
+    size_t pos = profilePicture.find_last_of("/\\");
+    string link = profilePicture.substr(pos);
+    return link;
+  } else {
+    return DEFAULT_PROFILE_PICTURE;
+  }
+} else {
+  return DEFAULT_PROFILE_PICTURE;
+}
+}
+
+string Program::getUserProfilePicture(string id) {
+if(isUserIdValid(id)) {
+  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+  string profilePicture = config.findField("uid",id,"profile_photo_path");
+  if (profilePicture != NONE_STRING) {
+    size_t pos = profilePicture.find_last_of("/\\");
+    string link = profilePicture.substr(pos);
+    return link;
+  } else {
+    return DEFAULT_PROFILE_PICTURE;
+  }
+} else {
+  return DEFAULT_PROFILE_PICTURE;
+}
+}
+
+string Program::currentPostId() {
+  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+  string uid = user_ptr->getId();
+  string last_post_id = config.findField("uid", uid, "last_post_id");
+  last_post_id = to_string(stoi(last_post_id) + 1);
+  return last_post_id;
+}
+
+  string Program::AllUsersHeader() {
+    string result = "";
+    CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+    vector<string> uids = config.findColumn("uid");
+    for (const string& uid : uids) {
+      result += uid + " | ";
+      result += printUserHeader(uid);
+      result += "<br>";
+    }
+    return result;
+  }

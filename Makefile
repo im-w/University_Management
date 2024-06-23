@@ -20,6 +20,7 @@ SRC_FILES = \
 	server/route.cpp \
 	src/handlers.cpp \
 	src/main.cpp \
+	src/functions.cpp \
 	src/Admin.cpp \
 	src/CSVHandler.cpp \
 	src/Professor.cpp \

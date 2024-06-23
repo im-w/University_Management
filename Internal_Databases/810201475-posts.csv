@@ -1,2 +1,5 @@
 post_id,title,message,attach_path,type
-1,my first post,dsdsdsdsdsdsds,NONE_STRING,post
+1,my first post,this is new,NONE_STRING,post
+3,is it ok?,i dont know,Users_Storage/Posts/810201475-post-id-3.png,post
+4,is it ok again?,sec test,NONE_STRING,post
+5,what about with picture,test test,Users_Storage/Posts/810201475-post-id-5.png,post

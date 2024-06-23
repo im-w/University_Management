@@ -54,6 +54,14 @@ public:
   void setupNotificationsFile(CSVHandler &File);
   void setupTaFormFile(CSVHandler &File);
 
+  string getUserId();
+  string getUserHeader();
+  string getUserMajor();
+  string getProfilePicture();
+  string getUserProfilePicture(string id);
+  string currentPostId();
+  string AllUsersHeader();
+
   bool login(const string id, const string password);
   void logout();
   void post(const string title, const string message, const string attach);
@@ -62,8 +70,8 @@ public:
                    const string message, const string attach);
   void deletePost(const string id);
   void professorCloseTaPost(const string id);
-  void printUserHeader(const string id);
-  void seePage(const string id);
+  string printUserHeader(const string id);
+  string seePage(const string id);
   void seeChannelPage(const string id);
   void getPost(const string id, const string post_id);
   void getChannelPost(const string id, const string post_id);
