@@ -122,7 +122,8 @@ private:
 
 class PostStudentChangeProfilePictureHandler : public RequestHandler {
 public:
-  PostStudentChangeProfilePictureHandler(Program &program,Server &server) : program_(program) , server_(server) {}
+  PostStudentChangeProfilePictureHandler(Program &program, Server &server)
+      : program_(program), server_(server) {}
   Response *callback(Request *) override;
 
 private:
@@ -132,7 +133,8 @@ private:
 
 class PostStudentDeleteProfilePictureHandler : public RequestHandler {
 public:
-  PostStudentDeleteProfilePictureHandler(Program &program) : program_(program) {}
+  PostStudentDeleteProfilePictureHandler(Program &program)
+      : program_(program) {}
   Response *callback(Request *) override;
 
 private:
@@ -141,7 +143,8 @@ private:
 
 class PostStudentSendPostHandler : public RequestHandler {
 public:
-  PostStudentSendPostHandler(Program &program,Server &server) : program_(program) , server_(server) {}
+  PostStudentSendPostHandler(Program &program, Server &server)
+      : program_(program), server_(server) {}
   Response *callback(Request *) override;
 
 private:
@@ -205,7 +208,8 @@ private:
 
 class PostProfessorChangeProfilePictureHandler : public RequestHandler {
 public:
-  PostProfessorChangeProfilePictureHandler(Program &program,Server &server) : program_(program) , server_(server) {}
+  PostProfessorChangeProfilePictureHandler(Program &program, Server &server)
+      : program_(program), server_(server) {}
   Response *callback(Request *) override;
 
 private:
@@ -215,7 +219,8 @@ private:
 
 class PostProfessorDeleteProfilePictureHandler : public RequestHandler {
 public:
-  PostProfessorDeleteProfilePictureHandler(Program &program) : program_(program) {}
+  PostProfessorDeleteProfilePictureHandler(Program &program)
+      : program_(program) {}
   Response *callback(Request *) override;
 
 private:
@@ -224,7 +229,8 @@ private:
 
 class PostProfessorSendPostHandler : public RequestHandler {
 public:
-  PostProfessorSendPostHandler(Program &program,Server &server) : program_(program) , server_(server) {}
+  PostProfessorSendPostHandler(Program &program, Server &server)
+      : program_(program), server_(server) {}
   Response *callback(Request *) override;
 
 private:
@@ -286,7 +292,6 @@ private:
   Program &program_;
 };
 
-
 class AdminAddOfferCourseHandler : public RequestHandler {
 public:
   AdminAddOfferCourseHandler(Program &program) : program_(program) {}
@@ -307,7 +312,8 @@ private:
 
 class PostAdminChangeProfilePictureHandler : public RequestHandler {
 public:
-  PostAdminChangeProfilePictureHandler(Program &program,Server &server) : program_(program) , server_(server) {}
+  PostAdminChangeProfilePictureHandler(Program &program, Server &server)
+      : program_(program), server_(server) {}
   Response *callback(Request *) override;
 
 private:
@@ -326,7 +332,8 @@ private:
 
 class PostAdminSendPostHandler : public RequestHandler {
 public:
-  PostAdminSendPostHandler(Program &program,Server &server) : program_(program) , server_(server) {}
+  PostAdminSendPostHandler(Program &program, Server &server)
+      : program_(program), server_(server) {}
   Response *callback(Request *) override;
 
 private:
@@ -342,7 +349,6 @@ public:
 private:
   Program &program_;
 };
-
 
 class UploadHandler : public RequestHandler {
 public:

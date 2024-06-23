@@ -1,7 +1,7 @@
+#include "Program.hpp"
 #include "Admin.hpp"
 #include "Constant.hpp"
 #include "Professor.hpp"
-#include "Program.hpp"
 #include "Student.hpp"
 #include "TimeRange.hpp"
 #include <algorithm>
@@ -521,7 +521,7 @@ string Program::printUserHeader(const string id) {
     cout << user_row[1] << " "
          << majorsCSV.findField("mid", user_row[2], "major") << " "
          << capitalize(user_row[3]) << " " << endl;
-        result = user_row[1] + " | " +
+    result = user_row[1] + " | " +
              majorsCSV.findField("mid", user_row[2], "major") + " | " +
              capitalize(user_row[3]) + " \n";
   } else {
@@ -551,10 +551,11 @@ string Program::seePage(const string id) {
         if (post[3] != NONE_STRING) {
           size_t pos = post[3].find_last_of("/\\");
           string link = post[3].substr(pos);
-          result += "<img src=\""+ link +"\" alt=\"Post Image\">\n";
+          result += "<img src=\"" + link + "\" alt=\"Post Image\">\n";
         }
         cout << post[0] << " \"" << post[1] << "\"" << endl;
-        result += "<p>" + post[0] + " \"" + post[1] + "\"" + "<br>" + post[2] + "</p></div>\n";
+        result += "<p>" + post[0] + " \"" + post[1] + "\"" + "<br>" + post[2] +
+                  "</p></div>\n";
       } else if (post[4] == POSTS_DATA_TA_FORM_TYPE) {
         cout << post[0] << " " << splitString(post[1], ';')[0] << endl;
       }
@@ -742,20 +743,18 @@ string Program::seeAllOfferCourses() {
   CSVHandler offer_courses(INTERNAL_DATA_DIRECTORY_PATH +
                            INTERNAL_DATA_OFFER_COURSES_NAME);
   vector<vector<string>> body_offer_courses = offer_courses.bodyMatrix();
-    std::stringstream ss;
-    for (const std::vector<std::string> &line : body_offer_courses) {
-        ss << line[0] << " "
-           << coursesCSV.findField("cid", line[1], "name") << " "
-           << line[3] << " "
-           << professorsCSV.findField("pid", line[2], "name") << "<br>";
+  std::stringstream ss;
+  for (const std::vector<std::string> &line : body_offer_courses) {
+    ss << line[0] << " " << coursesCSV.findField("cid", line[1], "name") << " "
+       << line[3] << " " << professorsCSV.findField("pid", line[2], "name")
+       << "<br>";
 
-        cout << line[0] << " "
-           << coursesCSV.findField("cid", line[1], "name") << " "
-           << line[3] << " "
-           << professorsCSV.findField("pid", line[2], "name") << endl;
-    }
+    cout << line[0] << " " << coursesCSV.findField("cid", line[1], "name")
+         << " " << line[3] << " "
+         << professorsCSV.findField("pid", line[2], "name") << endl;
+  }
 
-    return ss.str();
+  return ss.str();
 }
 
 void Program::seeOfferCourses(const string &id) {
@@ -1013,25 +1012,25 @@ string Program::studentAllCourses() {
     cout << EMPTY_OUTPUT << endl;
     return EMPTY_OUTPUT;
   }
-    stringstream ss;
-    for (const size_t &index : userCoursesIndex) {
-        ss << body_offer_courses[index][0] << " "
-           << coursesCSV.findField("cid", body_offer_courses[index][1], "name") << " "
-           << body_offer_courses[index][3] << " "
-           << professorsCSV.findField("pid", body_offer_courses[index][2], "name") << " "
-           << body_offer_courses[index][4] << " "
-           << body_offer_courses[index][5] << " "
-           << body_offer_courses[index][6] << "<br>";
-           
-        cout << body_offer_courses[index][0] << " "
-           << coursesCSV.findField("cid", body_offer_courses[index][1], "name") << " "
-           << body_offer_courses[index][3] << " "
-           << professorsCSV.findField("pid", body_offer_courses[index][2], "name") << " "
-           << body_offer_courses[index][4] << " "
-           << body_offer_courses[index][5] << " "
-           << body_offer_courses[index][6] << endl;
-    }
-    return ss.str();
+  stringstream ss;
+  for (const size_t &index : userCoursesIndex) {
+    ss << body_offer_courses[index][0] << " "
+       << coursesCSV.findField("cid", body_offer_courses[index][1], "name")
+       << " " << body_offer_courses[index][3] << " "
+       << professorsCSV.findField("pid", body_offer_courses[index][2], "name")
+       << " " << body_offer_courses[index][4] << " "
+       << body_offer_courses[index][5] << " " << body_offer_courses[index][6]
+       << "<br>";
+
+    cout << body_offer_courses[index][0] << " "
+         << coursesCSV.findField("cid", body_offer_courses[index][1], "name")
+         << " " << body_offer_courses[index][3] << " "
+         << professorsCSV.findField("pid", body_offer_courses[index][2], "name")
+         << " " << body_offer_courses[index][4] << " "
+         << body_offer_courses[index][5] << " " << body_offer_courses[index][6]
+         << endl;
+  }
+  return ss.str();
 }
 
 void Program::checkUserCommand(const vector<string> &input) {
@@ -1442,7 +1441,6 @@ void Program::postProfilePhotoCommand(const vector<string> &input) {
   addProfilePhoto(photo);
 }
 
-
 void Program::deletePostCommand(const vector<string> &input) {
   string id = NONE_STRING;
   for (size_t i = 3; i < input.size(); i++) {
@@ -1721,20 +1719,15 @@ string Program::capitalize(const string &input) {
   return result;
 }
 
-string Program::getUserId() {
-  return user_ptr->getId();
-}
+string Program::getUserId() { return user_ptr->getId(); }
 
-string Program::getUserHeader() {
-    return printUserHeader(user_ptr->getId());
-}
-
+string Program::getUserHeader() { return printUserHeader(user_ptr->getId()); }
 
 string Program::getUserMajor() {
   string uid = user_ptr->getId();
-  if(isUserIdValid(uid)) {
-  string major_id = studentsCSV.findField("sid", uid, "major_id");
-  return majorsCSV.findField("mid",major_id,"major");
+  if (isUserIdValid(uid)) {
+    string major_id = studentsCSV.findField("sid", uid, "major_id");
+    return majorsCSV.findField("mid", major_id, "major");
   } else {
     return "";
   }
@@ -1742,35 +1735,35 @@ string Program::getUserMajor() {
 
 string Program::getProfilePicture() {
   string uid = user_ptr->getId();
-if(isUserIdValid(uid)) {
-  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
-  string profilePicture = config.findField("uid",uid,"profile_photo_path");
-  if (profilePicture != NONE_STRING) {
-    size_t pos = profilePicture.find_last_of("/\\");
-    string link = profilePicture.substr(pos);
-    return link;
+  if (isUserIdValid(uid)) {
+    CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+    string profilePicture = config.findField("uid", uid, "profile_photo_path");
+    if (profilePicture != NONE_STRING) {
+      size_t pos = profilePicture.find_last_of("/\\");
+      string link = profilePicture.substr(pos);
+      return link;
+    } else {
+      return DEFAULT_PROFILE_PICTURE;
+    }
   } else {
     return DEFAULT_PROFILE_PICTURE;
   }
-} else {
-  return DEFAULT_PROFILE_PICTURE;
-}
 }
 
 string Program::getUserProfilePicture(string id) {
-if(isUserIdValid(id)) {
-  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
-  string profilePicture = config.findField("uid",id,"profile_photo_path");
-  if (profilePicture != NONE_STRING) {
-    size_t pos = profilePicture.find_last_of("/\\");
-    string link = profilePicture.substr(pos);
-    return link;
+  if (isUserIdValid(id)) {
+    CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+    string profilePicture = config.findField("uid", id, "profile_photo_path");
+    if (profilePicture != NONE_STRING) {
+      size_t pos = profilePicture.find_last_of("/\\");
+      string link = profilePicture.substr(pos);
+      return link;
+    } else {
+      return DEFAULT_PROFILE_PICTURE;
+    }
   } else {
     return DEFAULT_PROFILE_PICTURE;
   }
-} else {
-  return DEFAULT_PROFILE_PICTURE;
-}
 }
 
 string Program::currentPostId() {
@@ -1781,14 +1774,14 @@ string Program::currentPostId() {
   return last_post_id;
 }
 
-  string Program::AllUsersHeader() {
-    string result = "";
-    CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
-    vector<string> uids = config.findColumn("uid");
-    for (const string& uid : uids) {
-      result += uid + " | ";
-      result += printUserHeader(uid);
-      result += "<br>";
-    }
-    return result;
+string Program::AllUsersHeader() {
+  string result = "";
+  CSVHandler config(INTERNAL_DATA_DIRECTORY_PATH + INTERNAL_DATA_CONFIG_NAME);
+  vector<string> uids = config.findColumn("uid");
+  for (const string &uid : uids) {
+    result += uid + " | ";
+    result += printUserHeader(uid);
+    result += "<br>";
   }
+  return result;
+}

@@ -89,4 +89,6 @@ const string TEACHERS_PATH = "./External_Databases/teachers.csv";
 
 const string DEFAULT_PROFILE_PICTURE = "/default-profile-picture.png";
 
+const string IMAGE_CSV_PATH = "Users_Storage/images-path.csv";
+
 #endif // CONSTANT_HPP
